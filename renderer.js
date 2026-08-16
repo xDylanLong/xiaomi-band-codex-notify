@@ -11,6 +11,8 @@
     format: FORMAT,
     version: VERSION,
     device: { model: "Xiaomi Smart Band 10 Pro", width: WIDTH, height: HEIGHT },
+    mode: "watchface",
+    plan: { date: new Date().toISOString().slice(0, 10), title: "下肢力量训练", duration: 30, target: "深蹲 3×12 · 步行 20 分钟", note: "保持稳定呼吸，完成后拉伸", completed: false },
     background: { color: "#10141c", imageDataUrl: null },
     palette: { primary: "#f4f7fb", accent: "#9ff36b" },
     timeStyle: "24",
@@ -53,10 +55,21 @@
 
   function normalizeState(source) {
     const base = clone(DEFAULT_STATE);
+    const incomingPlan = source.plan && typeof source.plan === "object" ? source.plan : {};
     const state = {
       ...base,
       ...source,
       device: { ...base.device, ...(source.device || {}), width: WIDTH, height: HEIGHT },
+      mode: source.mode === "plan" ? "plan" : "watchface",
+      plan: {
+        ...base.plan,
+        date: typeof incomingPlan.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(incomingPlan.date) ? incomingPlan.date : base.plan.date,
+        title: typeof incomingPlan.title === "string" ? incomingPlan.title.slice(0, 22) : base.plan.title,
+        duration: Number.isFinite(incomingPlan.duration) ? Math.max(1, Math.min(180, Math.round(incomingPlan.duration))) : base.plan.duration,
+        target: typeof incomingPlan.target === "string" ? incomingPlan.target.slice(0, 48) : base.plan.target,
+        note: typeof incomingPlan.note === "string" ? incomingPlan.note.slice(0, 60) : base.plan.note,
+        completed: incomingPlan.completed === true
+      },
       background: { ...base.background, ...(source.background || {}), color: color(source.background && source.background.color, base.background.color) },
       palette: { ...base.palette, ...(source.palette || {}), primary: color(source.palette && source.palette.primary, base.palette.primary), accent: color(source.palette && source.palette.accent, base.palette.accent) },
       timeStyle: source.timeStyle === "12" ? "12" : "24",
@@ -84,6 +97,8 @@
       format: FORMAT,
       version: VERSION,
       device: { model: normalized.device.model, width: WIDTH, height: HEIGHT },
+      mode: normalized.mode,
+      plan: { ...normalized.plan },
       background: { color: normalized.background.color, imageDataUrl: normalized.background.imageDataUrl || null },
       palette: { ...normalized.palette },
       timeStyle: normalized.timeStyle,
@@ -181,9 +196,69 @@
     ctx.restore();
   }
 
+  function drawPlanCard(ctx, state) {
+    const plan = state.plan;
+    const primary = state.palette.primary;
+    const accent = state.palette.accent;
+    ctx.fillStyle = state.background.color;
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    const image = getImage(state.background.imageDataUrl);
+    if (image && image.complete && image.naturalWidth) {
+      ctx.save();
+      ctx.globalAlpha = .2;
+      drawCover(ctx, image);
+      ctx.restore();
+    }
+    ctx.fillStyle = "rgba(5, 8, 12, .48)";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.fillStyle = accent;
+    ctx.fillRect(24, 26, 5, 284);
+    ctx.fillStyle = primary;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+    ctx.font = "700 13px Inter, -apple-system, BlinkMacSystemFont, sans-serif";
+    ctx.globalAlpha = .65;
+    ctx.fillText("TODAY / TRAINING PLAN", 49, 43);
+    ctx.globalAlpha = 1;
+    ctx.font = "700 35px Inter, -apple-system, BlinkMacSystemFont, sans-serif";
+    ctx.fillText(plan.date.replaceAll("-", "."), 48, 84);
+    ctx.font = "700 31px Inter, -apple-system, BlinkMacSystemFont, \"PingFang SC\", sans-serif";
+    ctx.fillText(plan.title || "运动计划", 48, 132);
+    ctx.fillStyle = accent;
+    ctx.font = "700 15px Inter, -apple-system, BlinkMacSystemFont, sans-serif";
+    ctx.fillText(`${plan.duration} MIN`, 48, 161);
+    ctx.strokeStyle = "rgba(255,255,255,.18)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(48, 185);
+    ctx.lineTo(432, 185);
+    ctx.stroke();
+    ctx.fillStyle = primary;
+    ctx.font = "600 12px Inter, -apple-system, BlinkMacSystemFont, \"PingFang SC\", sans-serif";
+    ctx.fillText("目标", 48, 211);
+    ctx.font = "500 18px Inter, -apple-system, BlinkMacSystemFont, \"PingFang SC\", sans-serif";
+    const target = plan.target || "未设置目标";
+    const targetLine = target.length > 24 ? `${target.slice(0, 24)}…` : target;
+    ctx.fillText(targetLine, 48, 238);
+    ctx.fillStyle = primary;
+    ctx.globalAlpha = .62;
+    ctx.font = "500 12px Inter, -apple-system, BlinkMacSystemFont, \"PingFang SC\", sans-serif";
+    const note = plan.note || "准备好后开始";
+    ctx.fillText(note.length > 38 ? `${note.slice(0, 38)}…` : note, 48, 267);
+    ctx.globalAlpha = 1;
+    ctx.textAlign = "right";
+    ctx.fillStyle = plan.completed ? accent : primary;
+    ctx.font = "700 12px Inter, -apple-system, BlinkMacSystemFont, sans-serif";
+    ctx.fillText(plan.completed ? "✓ DONE" : "○ READY", 432, 306);
+  }
+
   function renderWatchFace(ctx, incomingState) {
     const state = normalizeState(incomingState);
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    if (state.mode === "plan") {
+      drawPlanCard(ctx, state);
+      return;
+    }
     ctx.fillStyle = state.background.color;
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
     const image = getImage(state.background.imageDataUrl);

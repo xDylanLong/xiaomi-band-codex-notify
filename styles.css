@@ -37,6 +37,8 @@ h2 { font-size: 18px; letter-spacing: -.03em; }
 .panel-heading, .preview-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .chip, .verified-badge { color: var(--lime); border: 1px solid rgba(179,248,135,.22); background: rgba(179,248,135,.06); border-radius: 99px; padding: 5px 8px; font-size: 9px; white-space: nowrap; }
 .verified-badge { color: var(--blue); border-color: rgba(130,169,255,.22); background: rgba(130,169,255,.07); }
+.mode-field { display: block; margin-top: 19px; }
+.mode-field > span { display: block; margin-bottom: 7px; color: var(--muted); font-size: 10px; }
 .control-section { margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.07); }
 .section-title { display: flex; align-items: baseline; gap: 9px; margin-bottom: 15px; }
 .section-title span { color: var(--lime); font-size: 9px; font-weight: 800; letter-spacing: .08em; }
@@ -75,6 +77,9 @@ select:focus, .text-input-field input:focus { border-color: rgba(179,248,135,.55
 .palette-field > span { margin: 0; font-size: 10px; }
 .palette-field input[type="color"] { width: 22px; height: 22px; border-radius: 7px; }
 .drag-note { margin-top: 13px; color: var(--faint); font-size: 9px; line-height: 1.6; }
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: end; }
+.plan-done { min-height: 35px; padding: 0 9px; border: 1px solid rgba(255,255,255,.08); border-radius: 9px; }
+.plan-section .text-input-field { margin-bottom: 11px; }
 .editor-actions { display: grid; grid-template-columns: 1fr 1.35fr; gap: 8px; margin-top: 25px; }
 .secondary-button, .primary-button, .project-button { min-height: 37px; border-radius: 9px; border: 1px solid rgba(255,255,255,.1); font-size: 10px; font-weight: 700; }
 .secondary-button { color: var(--muted); background: rgba(255,255,255,.03); }
@@ -119,6 +124,15 @@ select:focus, .text-input-field input:focus { border-color: rgba(179,248,135,.55
 .install-steps p, .experimental-route p { color: var(--muted); font-size: 10px; line-height: 1.65; }
 .install-steps strong { display: inline; color: var(--text); font-size: 10px; }
 .experimental-route p { margin-top: 13px; }
+.capability-list { display: grid; gap: 9px; margin-top: 19px; }
+.capability-row { display: flex; gap: 8px; align-items: flex-start; padding: 9px 8px; border-radius: 9px; background: rgba(255,255,255,.025); }
+.capability-row > span { display: grid; place-items: center; flex: 0 0 auto; width: 17px; height: 17px; border-radius: 50%; font-size: 10px; font-weight: 800; }
+.capability-row strong, .capability-row small { display: block; }
+.capability-row strong { color: var(--text); font-size: 9px; }
+.capability-row small { margin-top: 3px; color: var(--muted); font-size: 8px; line-height: 1.35; }
+.capability-ok > span { color: #18210f; background: var(--lime); }
+.capability-warn > span { color: #231d0d; background: #f0ca69; }
+.capability-no > span { color: #2c130d; background: var(--danger); }
 .research-link { display: flex; gap: 9px; margin-top: 25px; padding: 0 4px; color: var(--muted); }
 .research-link > span { color: var(--blue); font-size: 17px; }
 .research-link strong, .research-link small { display: block; }

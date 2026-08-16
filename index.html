@@ -32,6 +32,13 @@
             </div>
             <span class="chip">480 × 336</span>
           </div>
+          <label class="mode-field">
+            <span>内容模式</span>
+            <select id="displayMode">
+              <option value="watchface">自由表盘</option>
+              <option value="plan">运动计划卡片</option>
+            </select>
+          </label>
 
           <section class="control-section">
             <div class="section-title"><span>01</span><h3>背景</h3></div>
@@ -42,7 +49,7 @@
             </div>
             <label class="upload-field" for="backgroundImage">
               <span class="upload-icon">↑</span>
-              <span><strong>上传背景图</strong><small>PNG / JPG · 自动裁切为 480×336</small></span>
+              <span><strong>上传截图 / 背景图</strong><small>PNG / JPG · 截图和飞书文档图片均可</small></span>
             </label>
             <input id="backgroundImage" type="file" accept="image/png,image/jpeg,image/webp" hidden />
             <button class="text-button" id="clearImage" type="button">移除背景图</button>
@@ -77,6 +84,19 @@
               <label class="palette-field"><span>强调色</span><input id="accentColor" type="color" value="#9ff36b" /></label>
             </div>
             <p class="drag-note">预览中的组件可以直接拖动。导出图片会严格保持 480×336。</p>
+          </section>
+
+          <section class="control-section plan-section">
+            <div class="section-title"><span>04</span><h3>运动计划</h3></div>
+            <label class="text-input-field"><span>日期</span><input id="planDate" type="date" /></label>
+            <label class="text-input-field"><span>训练标题</span><input id="planTitle" type="text" maxlength="22" value="下肢力量训练" /></label>
+            <div class="plan-grid">
+              <label class="text-input-field"><span>时长（分钟）</span><input id="planDuration" type="number" min="1" max="180" value="30" /></label>
+              <label class="toggle-row plan-done"><span>已完成</span><input id="planCompleted" type="checkbox" /><span class="toggle"></span></label>
+            </div>
+            <label class="text-input-field"><span>训练目标</span><input id="planTarget" type="text" maxlength="48" value="深蹲 3×12 · 步行 20 分钟" /></label>
+            <label class="text-input-field"><span>提醒备注</span><input id="planNote" type="text" maxlength="60" value="保持稳定呼吸，完成后拉伸" /></label>
+            <p class="drag-note">切换到“运动计划卡片”后导出，适合在手环上查看当天的静态计划。</p>
           </section>
 
           <div class="editor-actions">
@@ -133,6 +153,11 @@
           <div class="route-card experimental-route">
             <div class="route-card-head"><span class="route-icon">✦</span><div><strong>原生表盘 / Vela App</strong><small>实验性适配，暂未在本工具内启用</small></div></div>
             <p>社区存在 `.bin` 表盘和 Vela `.rpk` 应用的逆向工具，但需要 Android、授权、地区固件与真机验证。本工具不会把 PNG 伪装成原生表盘包。</p>
+          </div>
+          <div class="capability-list" aria-label="通知和回复能力">
+            <div class="capability-row capability-ok"><span>✓</span><div><strong>手机第三方通知 → 手环</strong><small>可用：Mi Fitness → 通知和来电 → App 通知</small></div></div>
+            <div class="capability-row capability-warn"><span>!</span><div><strong>电脑 / Codex 直推</strong><small>当前不可用：需要 Android 通知桥接 App</small></div></div>
+            <div class="capability-row capability-no"><span>×</span><div><strong>微信语音回复</strong><small>官方不支持第三方通知回复；本手环也不是语音通信终端</small></div></div>
           </div>
           <div class="research-link"><span>⌁</span><div><strong>想继续深入？</strong><small>研究报告已写入 docs/research，记录了 SDK、格式和风险边界。</small></div></div>
         </aside>

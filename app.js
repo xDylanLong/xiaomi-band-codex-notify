@@ -10,6 +10,7 @@
 
   const $ = (id) => document.getElementById(id);
   const controls = {
+    displayMode: $("displayMode"),
     backgroundColor: $("backgroundColor"),
     backgroundImage: $("backgroundImage"),
     clearImage: $("clearImage"),
@@ -21,7 +22,13 @@
     dateVisible: $("dateVisible"),
     stepsVisible: $("stepsVisible"),
     heartVisible: $("heartVisible"),
-    textVisible: $("textVisible")
+    textVisible: $("textVisible"),
+    planDate: $("planDate"),
+    planTitle: $("planTitle"),
+    planDuration: $("planDuration"),
+    planTarget: $("planTarget"),
+    planNote: $("planNote"),
+    planCompleted: $("planCompleted")
   };
 
   function widget(id) { return state.widgets.find((item) => item.id === id); }
@@ -40,21 +47,35 @@
   }
 
   function syncControls() {
+    controls.displayMode.value = state.mode;
     controls.backgroundColor.value = state.background.color;
     controls.timeStyle.value = state.timeStyle;
     controls.customText.value = widget("text").value || "";
     controls.primaryColor.value = state.palette.primary;
     controls.accentColor.value = state.palette.accent;
+    controls.planDate.value = state.plan.date;
+    controls.planTitle.value = state.plan.title;
+    controls.planDuration.value = state.plan.duration;
+    controls.planTarget.value = state.plan.target;
+    controls.planNote.value = state.plan.note;
+    controls.planCompleted.checked = state.plan.completed;
     ["time", "date", "steps", "heart", "text"].forEach((id) => { controls[`${id}Visible`].checked = widget(id).visible; });
   }
 
   function setVisible(id, value) { widget(id).visible = Boolean(value); render(); }
 
+  controls.displayMode.addEventListener("change", (event) => { state.mode = event.target.value === "plan" ? "plan" : "watchface"; render(); showStatus(state.mode === "plan" ? "已切换到运动计划卡片。" : "已切换到自由表盘。"); });
   controls.backgroundColor.addEventListener("input", (event) => { state.background.color = event.target.value; render(); });
   controls.timeStyle.addEventListener("change", (event) => { state.timeStyle = event.target.value; render(); });
   controls.customText.addEventListener("input", (event) => { widget("text").value = event.target.value.slice(0, 18); render(); });
   controls.primaryColor.addEventListener("input", (event) => { state.palette.primary = event.target.value; render(); });
   controls.accentColor.addEventListener("input", (event) => { state.palette.accent = event.target.value; render(); });
+  controls.planDate.addEventListener("input", (event) => { state.plan.date = event.target.value; render(); });
+  controls.planTitle.addEventListener("input", (event) => { state.plan.title = event.target.value.slice(0, 22); render(); });
+  controls.planDuration.addEventListener("input", (event) => { state.plan.duration = Math.max(1, Math.min(180, Number(event.target.value) || 1)); render(); });
+  controls.planTarget.addEventListener("input", (event) => { state.plan.target = event.target.value.slice(0, 48); render(); });
+  controls.planNote.addEventListener("input", (event) => { state.plan.note = event.target.value.slice(0, 60); render(); });
+  controls.planCompleted.addEventListener("change", (event) => { state.plan.completed = event.target.checked; render(); });
   ["time", "date", "steps", "heart", "text"].forEach((id) => controls[`${id}Visible`].addEventListener("change", (event) => setVisible(id, event.target.checked)));
 
   controls.backgroundImage.addEventListener("change", (event) => {
