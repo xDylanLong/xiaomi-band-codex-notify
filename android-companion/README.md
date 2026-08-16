@@ -6,12 +6,22 @@
 
 用 Android Studio 打开 `android-companion/`，等待 Gradle sync，然后运行 `app`。项目使用 Java、Android API 26+、Android Gradle Plugin 8.7.3，不依赖 AndroidX 或第三方运行时库。
 
-当前开发机没有 Android SDK、Gradle 或 JDK，因此本仓库只能做源码和协议级验证，不能在当前环境直接生成 APK。具备 Android 工具链后可执行：
+标准 Android Studio 环境可以直接构建 APK。若使用 Gradle，可执行：
 
 ```bash
 cd android-companion
 gradle assembleDebug
 ```
+
+如果没有 Gradle，也可以使用仓库内的标准工具链脚本：
+
+```bash
+export JAVA_HOME=/path/to/jdk-17
+export ANDROID_SDK_ROOT=/path/to/android-sdk
+./android-companion/build-local.sh
+```
+
+输出文件为 `android-companion/releases/Band10ProBridge-debug.apk`。
 
 ## 首次配置
 
@@ -20,6 +30,8 @@ gradle assembleDebug
 3. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `Band 10 Pro Bridge`。
 4. 电脑与手机连接同一个局域网。
 5. 使用 `bridge/bandctl.mjs` 调用 Android 接口。
+
+已有 Debug APK：`releases/Band10ProBridge-debug.apk`。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
 
 ## HTTP API
 

@@ -40,8 +40,9 @@ python3 -m http.server 4173
 - [Android 伴侣源码](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/android-companion/README.md)：在手机局域网 `8787` 端口接收通知请求，并发布标准 Android 通知。
 - [电脑端 CLI](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/bridge/README.md)：用 `node bridge/bandctl.mjs notify ...` 给 Android 伴侣发通知。
 - [桥接协议](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/bridge/protocol.md)：适合 Codex、脚本和其他程序直接调用。
+- [完整使用说明](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/docs/usage.md)：安装 APK、配置 Mi Fitness、发送通知和运动计划。
 
-完整路径是：电脑/Codex → `bandctl` → Android 伴侣 → Mi Fitness App 通知同步 → 小米手环。当前开发机没有 Android SDK、Gradle 或 JDK，所以 Android APK 尚未在本机编译；Node CLI 和协议测试已可运行。
+完整路径是：电脑/Codex → `bandctl` → Android 伴侣 → Mi Fitness App 通知同步 → 小米手环。仓库已提供并验证 Debug APK；如果要重新构建，可使用 Android Studio，或执行 `android-companion/build-local.sh`。
 
 ## 调研文档
 
