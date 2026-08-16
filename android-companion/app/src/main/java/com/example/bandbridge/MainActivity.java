@@ -4,17 +4,16 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -29,6 +28,7 @@ import java.util.UUID;
 public class MainActivity extends Activity {
     static final String PREFS = "bridge_prefs";
     static final String TOKEN_KEY = "token";
+    private static final String SETUP_COMPLETE_KEY = "setup_complete";
     private TextView status;
     private TextView tokenView;
 
@@ -45,11 +45,32 @@ public class MainActivity extends Activity {
         content.setOrientation(LinearLayout.VERTICAL);
         content.setPadding(padding, padding, padding, padding);
 
-        TextView title = text("Dylan小米手环", 24, true);
+        ImageView logo = new ImageView(this);
+        int logoResource = getResources().getIdentifier("logo", "drawable", getPackageName());
+        logo.setImageResource(logoResource);
+        logo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        content.addView(logo, new LinearLayout.LayoutParams(-1, dp(120)));
+
+        TextView title = text("小米手环Codex通知", 24, true);
         content.addView(title, wrap());
-        TextView subtitle = text("电脑 / Codex → Android 通知 → Mi Fitness → 手环", 14, false);
+        TextView subtitle = text("Codex 完成任务 → 手机通知 → Mi Fitness → 手环", 14, false);
         subtitle.setPadding(0, dp(8), 0, dp(22));
         content.addView(subtitle, wrap());
+
+        boolean setupComplete = getSharedPreferences(PREFS, MODE_PRIVATE).getBoolean(SETUP_COMPLETE_KEY, false);
+        if (!setupComplete) {
+            content.addView(text("三步开始", 16, true), wrap());
+            content.addView(text("允许通知、可选开启手机通知监听，然后启动局域网 bridge。Codex 电脑端再安装一次 Stop hook。", 13, false), wrap());
+            content.addView(buttonWithAction("1 允许本 App 通知", view -> openNotificationSettings()), wrap());
+            content.addView(buttonWithAction("2 开启手机通知监听（可选）", view -> openNotificationListenerSettings()), wrap());
+            content.addView(buttonWithAction("3 启动 LAN bridge", view -> {
+                startBridge();
+                getSharedPreferences(PREFS, MODE_PRIVATE).edit().putBoolean(SETUP_COMPLETE_KEY, true).apply();
+                setStatus("bridge 已启动：端口 " + BridgeService.PORT);
+            }), wrap());
+            content.addView(text("电脑端安装命令:\n" + desktopCommand(), 12, false), wrap());
+            content.addView(buttonWithAction("复制电脑端安装命令", view -> copy("Codex hook command", desktopCommand())), wrap());
+        }
 
         content.addView(text("LAN 地址", 13, true), wrap());
         TextView addresses = text(joinAddresses(), 14, false);
@@ -61,40 +82,26 @@ public class MainActivity extends Activity {
         tokenView = text(getToken(), 13, false);
         tokenView.setTypeface(Typeface.MONOSPACE);
         tokenView.setTextIsSelectable(true);
-        tokenView.setPadding(0, dp(7), 0, dp(16));
+        tokenView.setPadding(0, dp(7), 0, dp(10));
         content.addView(tokenView, wrap());
 
-        Button copy = button("复制 token");
-        copy.setOnClickListener(view -> {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("Band bridge token", getToken()));
-            setStatus("token 已复制");
-        });
-        content.addView(copy, wrap());
-
-        Button start = button("启动 LAN bridge");
-        start.setOnClickListener(view -> {
+        content.addView(buttonWithAction("复制 token", view -> copy("Band bridge token", getToken())), wrap());
+        content.addView(buttonWithAction("启动 LAN bridge", view -> {
             startBridge();
             setStatus("bridge 已启动：端口 " + BridgeService.PORT);
-        });
-        content.addView(start, wrap());
-
-        Button stop = button("停止 LAN bridge");
-        stop.setOnClickListener(view -> {
+        }), wrap());
+        content.addView(buttonWithAction("停止 LAN bridge", view -> {
             stopService(new Intent(this, BridgeService.class));
             setStatus("bridge 已停止");
-        });
-        content.addView(stop, wrap());
+        }), wrap());
+        content.addView(buttonWithAction("打开本 App 通知设置", view -> openNotificationSettings()), wrap());
+        content.addView(buttonWithAction("打开手机通知监听设置", view -> openNotificationListenerSettings()), wrap());
 
-        Button permissions = button("打开本 App 通知设置");
-        permissions.setOnClickListener(view -> openNotificationSettings());
-        content.addView(permissions, wrap());
-
-        status = text("先在 Mi Fitness 中允许本 App 的通知，再启动 bridge。", 13, false);
+        status = text("局域网模式：电脑和手机需要连接同一个 Wi-Fi。", 13, false);
         status.setPadding(0, dp(22), 0, dp(10));
         content.addView(status, wrap());
 
-        TextView command = text("电脑端示例:\nnode bridge/bandctl.mjs notify --host <手机IP> --token <token> --title Codex --body '任务完成'", 12, false);
+        TextView command = text("手动测试:\nnode bridge/bandctl.mjs notify --host <手机IP> --token <token> --title Codex --body '任务完成'", 12, false);
         command.setTypeface(Typeface.MONOSPACE);
         command.setPadding(0, dp(10), 0, dp(10));
         content.addView(command, wrap());
@@ -102,6 +109,17 @@ public class MainActivity extends Activity {
         ScrollView scroll = new ScrollView(this);
         scroll.addView(content);
         setContentView(scroll);
+    }
+
+    private String desktopCommand() {
+        String host = joinAddresses().split("\\n")[0].replace("http://", "").replace(":" + BridgeService.PORT, "");
+        return "node codex/install-hook.mjs --host " + host + " --token " + getToken();
+    }
+
+    private void copy(String label, String value) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, value));
+        setStatus("已复制到剪贴板");
     }
 
     private void startBridge() {
@@ -121,6 +139,11 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
         intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
         startActivity(intent);
+    }
+
+    private void openNotificationListenerSettings() {
+        try { startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)); }
+        catch (Exception ignored) { setStatus("系统不支持通知监听设置，请在系统设置中搜索“通知使用权”"); }
     }
 
     private String getToken() {
@@ -153,10 +176,11 @@ public class MainActivity extends Activity {
         return view;
     }
 
-    private Button button(String label) {
+    private Button buttonWithAction(String label, View.OnClickListener action) {
         Button button = new Button(this);
         button.setText(label);
         button.setGravity(Gravity.CENTER);
+        button.setOnClickListener(action);
         return button;
     }
 

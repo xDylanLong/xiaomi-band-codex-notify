@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DylanXiaomiBand"
+rootProject.name = "XiaomiBandCodexNotification"
 include(":app")

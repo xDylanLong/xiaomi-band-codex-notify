@@ -1,4 +1,4 @@
-# Dylan小米手环 Desktop Bridge
+# 小米手环Codex通知 Desktop Bridge
 
 This CLI sends notifications from a Mac/PC to the Android companion over the local network. The Android app then posts a normal Android notification; Mi Fitness can mirror that app's notifications to the band.
 

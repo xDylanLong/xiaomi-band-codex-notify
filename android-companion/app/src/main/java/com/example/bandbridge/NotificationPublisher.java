@@ -21,9 +21,9 @@ public final class NotificationPublisher {
     public static void ensureChannels(Context context) {
         if (Build.VERSION.SDK_INT < 26) return;
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.createNotificationChannel(new NotificationChannel(SERVICE_CHANNEL, "Band bridge service", NotificationManager.IMPORTANCE_LOW));
-        NotificationChannel messages = new NotificationChannel(MESSAGE_CHANNEL, "Band messages", NotificationManager.IMPORTANCE_HIGH);
-        messages.setDescription("Messages forwarded to Xiaomi Smart Band 10 Pro through Mi Fitness");
+        manager.createNotificationChannel(new NotificationChannel(SERVICE_CHANNEL, "小米手环Codex通知服务", NotificationManager.IMPORTANCE_LOW));
+        NotificationChannel messages = new NotificationChannel(MESSAGE_CHANNEL, "Codex 任务通知", NotificationManager.IMPORTANCE_HIGH);
+        messages.setDescription("通过 Mi Fitness 转发到小米手环的 Codex 通知");
         manager.createNotificationChannel(messages);
     }
 
@@ -31,7 +31,7 @@ public final class NotificationPublisher {
         ensureChannels(context);
         return new Notification.Builder(context, SERVICE_CHANNEL)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Dylan小米手环")
+                .setContentTitle("小米手环Codex通知")
                 .setContentText("LAN bridge running on port " + BridgeService.PORT)
                 .setOngoing(true)
                 .build();
