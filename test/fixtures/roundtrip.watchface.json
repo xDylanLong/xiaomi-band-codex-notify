@@ -1,0 +1,25 @@
+{
+  "format": "xiaomi-band-watchface-project",
+  "version": 1,
+  "device": {
+    "model": "Xiaomi Smart Band 10 Pro",
+    "width": 480,
+    "height": 336
+  },
+  "background": {
+    "color": "#18211a",
+    "imageDataUrl": null
+  },
+  "palette": {
+    "primary": "#ffffff",
+    "accent": "#b3f887"
+  },
+  "timeStyle": "24",
+  "widgets": [
+    { "id": "time", "type": "time", "x": 240, "y": 122, "colorRole": "primary", "visible": true, "fontSize": 77 },
+    { "id": "date", "type": "date", "x": 240, "y": 187, "colorRole": "primary", "visible": true, "fontSize": 18 },
+    { "id": "steps", "type": "steps", "x": 126, "y": 269, "colorRole": "accent", "visible": false, "fontSize": 16 },
+    { "id": "heart", "type": "heart", "x": 353, "y": 269, "colorRole": "accent", "visible": true, "fontSize": 16 },
+    { "id": "text", "type": "text", "x": 240, "y": 306, "colorRole": "primary", "visible": true, "fontSize": 11, "value": "ROUNDTRIP / OK" }
+  ]
+}

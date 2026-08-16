@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0d13" />
+    <title>Band 10 Pro 表盘工坊</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell" id="app">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <span class="brand-mark">10</span>
+          <div>
+            <p class="eyebrow">XIAOMI SMART BAND 10 PRO</p>
+            <h1>表盘工坊</h1>
+          </div>
+        </div>
+        <div class="topbar-meta">
+          <span class="status-dot"></span>
+          <span>本地运行 · 无需上传</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel editor-panel" aria-label="表盘编辑器">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">EDITOR</p>
+              <h2>编辑内容</h2>
+            </div>
+            <span class="chip">480 × 336</span>
+          </div>
+
+          <section class="control-section">
+            <div class="section-title"><span>01</span><h3>背景</h3></div>
+            <label class="field-label" for="backgroundColor">底色</label>
+            <div class="color-row">
+              <input id="backgroundColor" type="color" value="#10141c" aria-label="背景颜色" />
+              <span id="backgroundColorValue">#10141C</span>
+            </div>
+            <label class="upload-field" for="backgroundImage">
+              <span class="upload-icon">↑</span>
+              <span><strong>上传背景图</strong><small>PNG / JPG · 自动裁切为 480×336</small></span>
+            </label>
+            <input id="backgroundImage" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+            <button class="text-button" id="clearImage" type="button">移除背景图</button>
+          </section>
+
+          <section class="control-section">
+            <div class="section-title"><span>02</span><h3>时间与信息</h3></div>
+            <label class="select-field">
+              <span>时间格式</span>
+              <select id="timeStyle">
+                <option value="24">24 小时制</option>
+                <option value="12">12 小时制</option>
+              </select>
+            </label>
+            <label class="text-input-field">
+              <span>自定义文字</span>
+              <input id="customText" type="text" maxlength="18" value="FOCUS / 01" placeholder="例如：FOCUS / 01" />
+            </label>
+            <div class="toggle-list">
+              <label class="toggle-row"><span><i class="swatch swatch-primary"></i>时间</span><input id="timeVisible" type="checkbox" checked /><span class="toggle"></span></label>
+              <label class="toggle-row"><span><i class="swatch swatch-primary"></i>日期</span><input id="dateVisible" type="checkbox" checked /><span class="toggle"></span></label>
+              <label class="toggle-row"><span><i class="swatch swatch-accent"></i>步数</span><input id="stepsVisible" type="checkbox" checked /><span class="toggle"></span></label>
+              <label class="toggle-row"><span><i class="swatch swatch-accent"></i>心率</span><input id="heartVisible" type="checkbox" checked /><span class="toggle"></span></label>
+              <label class="toggle-row"><span><i class="swatch swatch-primary"></i>文字</span><input id="textVisible" type="checkbox" checked /><span class="toggle"></span></label>
+            </div>
+          </section>
+
+          <section class="control-section compact-section">
+            <div class="section-title"><span>03</span><h3>颜色</h3></div>
+            <div class="palette-row">
+              <label class="palette-field"><span>主色</span><input id="primaryColor" type="color" value="#f4f7fb" /></label>
+              <label class="palette-field"><span>强调色</span><input id="accentColor" type="color" value="#9ff36b" /></label>
+            </div>
+            <p class="drag-note">预览中的组件可以直接拖动。导出图片会严格保持 480×336。</p>
+          </section>
+
+          <div class="editor-actions">
+            <button class="secondary-button" id="resetButton" type="button">恢复默认</button>
+            <button class="primary-button" id="exportPng" type="button"><span>↓</span> 导出 PNG</button>
+          </div>
+          <button class="project-button" id="exportProject" type="button">导出可编辑项目 <span>↗</span></button>
+          <label class="project-button project-import" for="importProject">导入项目 <span>↥</span></label>
+          <input id="importProject" type="file" accept="application/json,.watchface.json" hidden />
+        </aside>
+
+        <section class="preview-column" aria-label="表盘预览">
+          <div class="preview-header">
+            <div>
+              <p class="eyebrow">LIVE PREVIEW</p>
+              <h2>你的表盘</h2>
+            </div>
+            <span class="preview-status"><span class="pulse"></span>实时</span>
+          </div>
+          <div class="device-stage">
+            <div class="device-frame">
+              <div class="device-screen-wrap">
+                <canvas id="canvas" width="480" height="336" aria-label="表盘预览画布"></canvas>
+              </div>
+            </div>
+            <div class="device-shadow"></div>
+          </div>
+          <div class="preview-caption">
+            <span>可拖动组件调整位置</span>
+            <span class="caption-line"></span>
+            <span>屏幕比例 10 : 7</span>
+          </div>
+          <div class="status-message" id="statusMessage" role="status" aria-live="polite"></div>
+        </section>
+
+        <aside class="panel handoff-panel" aria-label="设备使用说明">
+          <div class="panel-heading handoff-heading">
+            <div>
+              <p class="eyebrow">ON DEVICE</p>
+              <h2>在手环上查看</h2>
+            </div>
+            <span class="verified-badge">已验证路径</span>
+          </div>
+          <div class="route-card official-route">
+            <div class="route-card-head"><span class="route-icon">✓</span><div><strong>相片表盘 · 官方路径</strong><small>当前版本可直接使用</small></div></div>
+            <p class="static-note">注意：导出的 PNG 是静态背景；预览中的时间、步数和心率是排版示例，不会通过本工具实时同步到手环。</p>
+            <ol class="install-steps">
+              <li><span>1</span><p>先点击左侧<strong>导出 PNG</strong>，保存到电脑或手机。</p></li>
+              <li><span>2</span><p>把 PNG 传到手机相册，打开<strong>小米运动健康</strong>。</p></li>
+              <li><span>3</span><p>进入<strong>设备 → 管理表盘 → 全部 → 自定义</strong>。</p></li>
+              <li><span>4</span><p>选择一个相片表盘，点击<strong>编辑 → 添加照片</strong>并同步。</p></li>
+            </ol>
+          </div>
+          <div class="route-card experimental-route">
+            <div class="route-card-head"><span class="route-icon">✦</span><div><strong>原生表盘 / Vela App</strong><small>实验性适配，暂未在本工具内启用</small></div></div>
+            <p>社区存在 `.bin` 表盘和 Vela `.rpk` 应用的逆向工具，但需要 Android、授权、地区固件与真机验证。本工具不会把 PNG 伪装成原生表盘包。</p>
+          </div>
+          <div class="research-link"><span>⌁</span><div><strong>想继续深入？</strong><small>研究报告已写入 docs/research，记录了 SDK、格式和风险边界。</small></div></div>
+        </aside>
+      </main>
+      <footer class="footer"><span>Band 10 Pro 表盘工坊</span><span>项目文件保存在你的设备上</span></footer>
+    </div>
+    <script src="renderer.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
