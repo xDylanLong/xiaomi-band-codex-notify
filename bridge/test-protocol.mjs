@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { buildNotifyPayload, buildPlanPayload, requestBridge } from "./bandctl.mjs";
+import { buildNotifyPayload, buildPlanPayload, requestBridge, run } from "./bandctl.mjs";
 
 const requests = [];
 const server = createServer(async (request, response) => {
@@ -29,6 +29,10 @@ assert.equal(health.ok, true);
 await requestBridge({ baseUrl, token: "test-token", path: "/v1/notify", method: "POST", body: notify });
 assert.equal(requests.at(-1).auth, "Bearer test-token");
 assert.equal(requests.at(-1).body.source, "codex");
+const runHealth = await run(["health", "--host", "127.0.0.1", "--port", String(port), "--token", "test-token", "--json"]);
+assert.equal(runHealth.ok, true);
+await run(["notify", "--host", "127.0.0.1", "--port", String(port), "--token", "test-token", "--title", "Codex", "--body", "done"]);
+assert.equal(requests.at(-1).auth, "Bearer test-token");
 await assert.rejects(() => requestBridge({ baseUrl, token: "wrong", path: "/v1/health" }), /401/);
 
 await new Promise((resolve) => server.close(resolve));

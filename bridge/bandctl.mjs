@@ -141,12 +141,12 @@ export async function run(argv, env = process.env) {
   const bearer = token(options, env);
   let result;
   if (command === "health") {
-    result = await requestBridge({ baseUrl, bearer, path: "/v1/health" });
+    result = await requestBridge({ baseUrl, token: bearer, path: "/v1/health" });
   } else if (command === "notify") {
     const image = options.image ? await encodeImage(options.image) : null;
-    result = await requestBridge({ baseUrl, bearer, path: "/v1/notify", method: "POST", body: buildNotifyPayload(options, image) });
+    result = await requestBridge({ baseUrl, token: bearer, path: "/v1/notify", method: "POST", body: buildNotifyPayload(options, image) });
   } else if (command === "plan") {
-    result = await requestBridge({ baseUrl, bearer, path: "/v1/plan", method: "POST", body: buildPlanPayload(options) });
+    result = await requestBridge({ baseUrl, token: bearer, path: "/v1/plan", method: "POST", body: buildPlanPayload(options) });
   } else {
     throw new Error(`未知命令: ${command}\\n\\n${usage()}`);
   }
