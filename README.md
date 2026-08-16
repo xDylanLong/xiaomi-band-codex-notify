@@ -33,6 +33,16 @@ python3 -m http.server 4173
 - 截图、飞书文档和运动计划：支持静态查看。上传截图/文档图片，或切换到“运动计划卡片”填写日期、标题、时长、目标和备注，再导出 PNG 同步。
 - 微信语音回复：不支持。10 Pro 官方 FAQ 说明第三方 App 通知只能查看、不能回复；来电快捷回复是预设文字，不是微信语音。要做电脑通知桥接或双向回复，需要另外开发 Android 伴侣 App，并不能由当前浏览器编辑器直接完成。
 
+## 能力最全方案
+
+仓库现在包含 Android 伴侣和电脑端 bridge CLI：
+
+- [Android 伴侣源码](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/android-companion/README.md)：在手机局域网 `8787` 端口接收通知请求，并发布标准 Android 通知。
+- [电脑端 CLI](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/bridge/README.md)：用 `node bridge/bandctl.mjs notify ...` 给 Android 伴侣发通知。
+- [桥接协议](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/bridge/protocol.md)：适合 Codex、脚本和其他程序直接调用。
+
+完整路径是：电脑/Codex → `bandctl` → Android 伴侣 → Mi Fitness App 通知同步 → 小米手环。当前开发机没有 Android SDK、Gradle 或 JDK，所以 Android APK 尚未在本机编译；Node CLI 和协议测试已可运行。
+
 ## 调研文档
 
 详细结论见 [小米手环 10 Pro 表盘能力调研](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/docs/research/xiaomi-band-10-pro-watchface-capabilities.md)。设计边界和数据格式见 [设计文档](/Users/thawingx/Documents/ChatGPT/xiaomi-custom-watch-plater/docs/superpowers/specs/2026-08-16-xiaomi-band-10-pro-watchface-tool-design.md)。

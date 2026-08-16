@@ -79,6 +79,12 @@
 - 导出/导入 `.watchface.json`，保存可编辑工程；
 - 明确提示原生 `.bin` 与 Vela 路径尚未被当前工具验证。
 
+## 推荐的全能力实现路径
+
+对于单一技术用户，最有价值的稳定方案不是继续破解私有 BLE，而是增加一个 Android 通知伴侣：电脑端用 CLI 通过局域网发送消息，Android 伴侣调用系统 `NotificationManager` 发布通知，Mi Fitness 再把这个 App 的通知同步到手环。Android 官方提供 `NotificationListenerService` 等通知能力；本项目的第一版桥接不读取其他 App 通知，只接收用户主动发送的 HTTP 消息，数据边界更小。
+
+Android 伴侣源码在 `android-companion/`，电脑端协议和 CLI 在 `bridge/`。这条路径不需要小米账号、设备授权 key 或私有 BLE 协议；但最终“手机通知已发布”到“手环已振动/显示”仍必须用真实手机、Mi Fitness 和手环验证。
+
 ## 来源
 
 1. [Xiaomi Smart Band 10 Pro FAQ](https://www.mi.com/global/support/faq/details/KA-703579/)：官方相片表盘、添加照片、编辑和同步流程。

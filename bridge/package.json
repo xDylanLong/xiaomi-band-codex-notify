@@ -1,0 +1,15 @@
+{
+  "name": "band10pro-bridge-cli",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "bandctl": "./bandctl.mjs"
+  },
+  "scripts": {
+    "health": "node bandctl.mjs health",
+    "test": "node test-protocol.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
