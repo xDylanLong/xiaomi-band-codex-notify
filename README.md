@@ -2,6 +2,8 @@
 
 一个只走局域网的 Codex 完成通知工具：手机安装「小米手环Codex通知」App，电脑端安装一次 Codex Stop hook，任务完成后即可通过 Mi Fitness 把通知同步到小米手环。仓库也保留表盘、截图/飞书文档图片和运动计划卡片能力。
 
+[下载 Android APK（v0.2.0）](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.2.0.apk) · [查看 GitHub Releases](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases)
+
 ## 直接使用
 
 双击打开 [index.html](index.html) 即可运行，不需要安装依赖或登录账号。
