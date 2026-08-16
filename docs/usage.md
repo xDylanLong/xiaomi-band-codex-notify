@@ -1,16 +1,16 @@
-# Band 10 Pro Bridge 使用说明
+# Dylan小米手环 使用说明
 
 ## 1. 安装 Android 伴侣
 
 直接安装仓库中的 Debug APK：
 
 ```bash
-$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/Band10ProBridge-debug.apk
+$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/Dylan小米手环-debug.apk
 ```
 
 也可以把 APK 传到 Android 手机后手动安装：
 
-`android-companion/releases/Band10ProBridge-debug.apk`
+`android-companion/releases/Dylan小米手环-debug.apk`
 
 打开 App 后：
 
@@ -27,7 +27,7 @@ $ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/Band1
 设备 → 通知和来电 → App 通知
 ```
 
-选中 `Band 10 Pro Bridge`。先用手机通知测试，确认手环可以收到伴侣 App 的通知。
+选中 `Dylan小米手环`。先用手机通知测试，确认手环可以收到伴侣 App 的通知。
 
 ## 3. 从电脑发送通知
 
@@ -74,7 +74,7 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出仍为 `android-companion/releases/Band10ProBridge-debug.apk`。
+脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出为 `android-companion/releases/Dylan小米手环-debug.apk`。
 
 ## 7. 排查
 

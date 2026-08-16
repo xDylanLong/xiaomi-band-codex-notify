@@ -38,6 +38,6 @@ fi
 "$SDK_TOOLS/zipalign" -f -p 4 "$BUILD_DIR/apk/with-dex.apk" "$BUILD_DIR/apk/aligned.apk"
 "$SDK_TOOLS/apksigner" sign --ks "$KEYSTORE" --ks-pass pass:android --key-pass pass:android \
   --ks-key-alias androiddebugkey --v4-signing-enabled false \
-  --out "$ROOT_DIR/android-companion/releases/Band10ProBridge-debug.apk" "$BUILD_DIR/apk/aligned.apk"
-"$SDK_TOOLS/apksigner" verify "$ROOT_DIR/android-companion/releases/Band10ProBridge-debug.apk"
-echo "Built $ROOT_DIR/android-companion/releases/Band10ProBridge-debug.apk"
+  --out "$ROOT_DIR/android-companion/releases/Dylan小米手环-debug.apk" "$BUILD_DIR/apk/aligned.apk"
+"$SDK_TOOLS/apksigner" verify "$ROOT_DIR/android-companion/releases/Dylan小米手环-debug.apk"
+echo "Built $ROOT_DIR/android-companion/releases/Dylan小米手环-debug.apk"

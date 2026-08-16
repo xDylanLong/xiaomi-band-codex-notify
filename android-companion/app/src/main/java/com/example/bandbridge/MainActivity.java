@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         content.setOrientation(LinearLayout.VERTICAL);
         content.setPadding(padding, padding, padding, padding);
 
-        TextView title = text("Band 10 Pro Bridge", 24, true);
+        TextView title = text("Dylan小米手环", 24, true);
         content.addView(title, wrap());
         TextView subtitle = text("电脑 / Codex → Android 通知 → Mi Fitness → 手环", 14, false);
         subtitle.setPadding(0, dp(8), 0, dp(22));

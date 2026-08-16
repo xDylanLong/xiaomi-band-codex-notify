@@ -31,7 +31,7 @@ public final class NotificationPublisher {
         ensureChannels(context);
         return new Notification.Builder(context, SERVICE_CHANNEL)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Band 10 Pro Bridge")
+                .setContentTitle("Dylan小米手环")
                 .setContentText("LAN bridge running on port " + BridgeService.PORT)
                 .setOngoing(true)
                 .build();

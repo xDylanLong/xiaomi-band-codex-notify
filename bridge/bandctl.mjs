@@ -28,7 +28,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  return `Band 10 Pro Android bridge CLI
+  return `Dylan小米手环 Android bridge CLI
 
 Usage:
   node bridge/bandctl.mjs health --host 192.168.1.23 --token TOKEN

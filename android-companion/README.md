@@ -1,4 +1,4 @@
-# Band 10 Pro Bridge Android Companion
+# Dylan小米手环 Android Companion
 
 这是电脑端桥接的 Android 端。它在局域网 `8787` 端口监听带 token 的 HTTP 请求，并把请求发布为标准 Android 通知。打开 Mi Fitness 的 App 通知同步后，这些通知可以继续到达 Xiaomi Smart Band 10 Pro。
 
@@ -21,17 +21,17 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-输出文件为 `android-companion/releases/Band10ProBridge-debug.apk`。
+输出文件为 `android-companion/releases/Dylan小米手环-debug.apk`。
 
 ## 首次配置
 
 1. 安装并打开 App，允许通知权限。
 2. 点击“启动 LAN bridge”，记下页面显示的手机 IP 和 token。
-3. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `Band 10 Pro Bridge`。
+3. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `Dylan小米手环`。
 4. 电脑与手机连接同一个局域网。
 5. 使用 `bridge/bandctl.mjs` 调用 Android 接口。
 
-已有 Debug APK：`releases/Band10ProBridge-debug.apk`。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
+已有 Debug APK：`releases/Dylan小米手环-debug.apk`。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
 
 ## HTTP API
 

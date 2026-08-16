@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Band10ProBridge"
+rootProject.name = "DylanXiaomiBand"
 include(":app")
