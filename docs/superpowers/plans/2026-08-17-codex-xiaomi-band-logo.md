@@ -2,16 +2,16 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the current product logo and Android notification icon with a flat Apple-style ChatGPT · Xiaomi mark connected by a recognizable smart-band strap, while preserving the existing notification and LAN bridge behavior.
+**Goal:** Replace the current product logo and Android notification icon with a flat Apple-style original abstract mark connected by a recognizable smart-band strap, while preserving the existing notification and LAN bridge behavior and avoiding direct copies of third-party logos.
 
-**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains the ChatGPT knot, Xiaomi mark, and a blue smart-band strap with a dark capsule. Add a deterministic monochrome Android notification glyph for `smallIcon`, load the color logo as `largeIcon`, and keep all existing notification payload, channel, bridge, and pairing behavior unchanged.
+**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains two newly invented abstract symbols and a blue smart-band strap with a dark capsule; it does not reproduce official ChatGPT/OpenAI or Xiaomi marks. Add a deterministic monochrome Android notification glyph for `smallIcon`, load the color logo as `largeIcon`, and keep all existing notification payload, channel, bridge, and pairing behavior unchanged.
 
 **Tech Stack:** OpenAI built-in image generation, PNG assets, Android Java `Notification.Builder`, Android drawable XML/PNG, Gradle Android build, shell-based asset verification.
 
 ## Global Constraints
 
 - Style is flat, restrained, rounded geometric, Apple-inspired, with clear whitespace and no 3D modeling, complex shadows, or glossy lighting.
-- ChatGPT and Xiaomi symbols must both appear and be connected by one recognizable smart-band strap with a central capsule.
+- Two newly invented abstract symbols must appear and be connected by one recognizable smart-band strap with a central capsule.
 - The product logo is transparent-background, square, full-color, and shared by product, Android launcher, and plugin surfaces.
 - The notification glyph is a high-contrast monochrome silhouette suitable for Android `smallIcon`.
 - Do not change `applicationId`, package name, LAN protocol, pairing flow, notification permissions, or existing notification payload behavior.
@@ -36,7 +36,7 @@
 
 **Interfaces:**
 - Produces a transparent PNG that all product surfaces consume.
-- The final file must contain both ChatGPT and Xiaomi symbols and one connecting smart-band strap.
+- The final file must contain two original abstract symbols and one connecting smart-band strap; it must not contain official third-party logos or wordmarks.
 
 - [x] Generate a square, transparent, flat Apple-style logo with no text, watermark, extra device, or background scene.
 - [x] Inspect the generated image for both marks, the connecting band, clean alpha edges, and legibility at small size.
