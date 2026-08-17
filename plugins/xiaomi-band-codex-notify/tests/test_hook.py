@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from band_config import build_notification, config_path, parse_pairing, read_config, request, send_notification, write_config
+from band_config import build_notification, config_path, config_candidates, parse_pairing, read_config, request, send_notification, write_config
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -50,6 +50,7 @@ class HookTests(unittest.TestCase):
             self.assertEqual(read_config(env), config)
             self.assertEqual(path.stat().st_mode & 0o777, 0o600)
             self.assertEqual(config_path(env), Path(directory) / "config.json")
+            self.assertEqual(config_candidates(env)[0], Path(directory) / "config.json")
 
     def test_http_request(self):
         Handler.requests = []

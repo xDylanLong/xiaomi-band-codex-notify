@@ -92,6 +92,23 @@ def config_path(environ=None):
     return Path.home() / ".config" / "xiaomi-band-codex-notify" / "config.json"
 
 
+def config_candidates(environ=None):
+    env = environ or os.environ
+    candidates = []
+    explicit = env.get("XIAOMI_BAND_CODEX_CONFIG")
+    plugin_data = env.get("PLUGIN_DATA")
+    if explicit:
+        candidates.append(Path(explicit).expanduser())
+    if plugin_data:
+        candidates.append(Path(plugin_data).expanduser() / "config.json")
+    candidates.append(Path.home() / ".config" / "xiaomi-band-codex-notify" / "config.json")
+    unique = []
+    for path in candidates:
+        if path not in unique:
+            unique.append(path)
+    return unique
+
+
 def write_config(config, environ=None):
     path = config_path(environ)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -104,7 +121,12 @@ def write_config(config, environ=None):
 
 
 def read_config(environ=None):
-    return normalize_config(json.loads(config_path(environ).read_text(encoding="utf-8")))
+    for path in config_candidates(environ):
+        try:
+            return normalize_config(json.loads(path.read_text(encoding="utf-8")))
+        except FileNotFoundError:
+            continue
+    raise FileNotFoundError("没有找到小米手环配对配置")
 
 
 def request(config, method, path, payload=None, timeout=2.5, authenticate=True):

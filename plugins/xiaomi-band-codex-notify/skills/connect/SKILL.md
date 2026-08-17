@@ -24,7 +24,7 @@ If `${PLUGIN_ROOT}` is unavailable in the shell, resolve the directory containin
 
 ## Existing configuration
 
-The helper stores the private configuration in the plugin's writable `PLUGIN_DATA` directory. If the user changes phone IP or regenerates the app token, repeat the pairing workflow. Do not create or edit `~/.codex/hooks.json` for this plugin.
+The helper stores the private configuration in the plugin's writable `PLUGIN_DATA` directory when available, otherwise in the user's private `~/.config/xiaomi-band-codex-notify/` directory. If the user changes phone IP or regenerates the app pairing code, repeat the pairing workflow. Do not create or edit `~/.codex/hooks.json` for this plugin.
 
 ## Manual notifications
 
