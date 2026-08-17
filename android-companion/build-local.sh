@@ -17,7 +17,21 @@ KEYSTORE="${BAND_BRIDGE_KEYSTORE:-$SIGNING_DIR/release.keystore}"
 KEYSTORE_PASSWORD="${BAND_BRIDGE_KEYSTORE_PASSWORD:-android}"
 KEY_PASSWORD="${BAND_BRIDGE_KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
 KEY_ALIAS="${BAND_BRIDGE_KEY_ALIAS:-xiaomi-band-codex-notify}"
+BASELINE_APK="${BAND_BRIDGE_BASELINE_APK:-$ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.2.apk}"
 APK_PATH="$ROOT_DIR/android-companion/releases/小米手环Codex通知-v${VERSION_NAME}.apk"
+
+certificate_from_apk() {
+  "$SDK_TOOLS/apksigner" verify --print-certs "$1" 2>/dev/null \
+    | awk -F': ' '/SHA-256 digest:/ {print tolower($2); exit}' \
+    | tr -d ':'
+}
+
+certificate_from_keystore() {
+  "$JAVA_BIN/keytool" -list -v -keystore "$KEYSTORE" \
+    -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" 2>/dev/null \
+    | awk -F': ' '/SHA256:/ {print tolower($2); exit}' \
+    | tr -d ':'
+}
 
 rm -rf "$BUILD_DIR"
 umask 077
@@ -44,15 +58,46 @@ cp "$BUILD_DIR/apk/unsigned.apk" "$BUILD_DIR/apk/with-dex.apk"
 (cd "$BUILD_DIR/dex" && zip -q "$BUILD_DIR/apk/with-dex.apk" classes.dex)
 
 if [[ ! -f "$KEYSTORE" ]]; then
+  if [[ -f "$BASELINE_APK" || "${BAND_BRIDGE_ALLOW_NEW_KEY:-0}" != "1" ]]; then
+    echo "Refusing to generate a new signing key for an upgrade build." >&2
+    echo "Restore the original keystore, or explicitly set BAND_BRIDGE_ALLOW_NEW_KEY=1 for a new-install release." >&2
+    exit 1
+  fi
   "$JAVA_BIN/keytool" -genkeypair -keystore "$KEYSTORE" \
     -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" \
     -alias "$KEY_ALIAS" -dname "CN=Xiaomi Band Codex Notify,O=Dylan,C=US" \
     -validity 10000 -keyalg RSA -keysize 2048 -noprompt
 fi
 chmod 600 "$KEYSTORE"
+
+if [[ -f "$BASELINE_APK" ]]; then
+  BASELINE_CERT="$(certificate_from_apk "$BASELINE_APK")"
+  KEYSTORE_CERT="$(certificate_from_keystore)"
+  if [[ -z "$BASELINE_CERT" || -z "$KEYSTORE_CERT" ]]; then
+    echo "Unable to read the signing certificate from $BASELINE_APK or $KEYSTORE." >&2
+    exit 1
+  fi
+  if [[ "$BASELINE_CERT" != "$KEYSTORE_CERT" ]]; then
+    echo "Refusing to build: signing certificate does not match $BASELINE_APK." >&2
+    echo "Expected: $BASELINE_CERT" >&2
+    echo "Current:  $KEYSTORE_CERT" >&2
+    echo "Use the original keystore; never create a new key for an upgrade release." >&2
+    exit 1
+  fi
+fi
+
 "$SDK_TOOLS/zipalign" -f -p 4 "$BUILD_DIR/apk/with-dex.apk" "$BUILD_DIR/apk/aligned.apk"
 "$SDK_TOOLS/apksigner" sign --ks "$KEYSTORE" --ks-pass "pass:$KEYSTORE_PASSWORD" \
   --key-pass "pass:$KEY_PASSWORD" --ks-key-alias "$KEY_ALIAS" \
   --v4-signing-enabled false --out "$APK_PATH" "$BUILD_DIR/apk/aligned.apk"
 "$SDK_TOOLS/apksigner" verify "$APK_PATH"
+if [[ -f "$BASELINE_APK" ]]; then
+  OUTPUT_CERT="$(certificate_from_apk "$APK_PATH")"
+  if [[ "$OUTPUT_CERT" != "$BASELINE_CERT" ]]; then
+    echo "Refusing to publish: final APK certificate does not match $BASELINE_APK." >&2
+    echo "Expected: $BASELINE_CERT" >&2
+    echo "Current:  $OUTPUT_CERT" >&2
+    exit 1
+  fi
+fi
 echo "Built $APK_PATH"

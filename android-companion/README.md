@@ -25,9 +25,9 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 
 ### 签名密钥
 
-脚本默认把固定签名密钥保存在 `android-companion/.signing/release.keystore`。该目录已加入 `.gitignore`，不会提交到公开仓库；重复构建时会复用同一个密钥，因此后续 APK 可以覆盖升级。发布者应备份这个 keystore，丢失后无法继续签名可升级版本。
+脚本默认把固定签名密钥保存在 `android-companion/.signing/release.keystore`。该目录已加入 `.gitignore`，不会提交到公开仓库；重复构建时会复用同一个密钥，因此后续 APK 可以覆盖升级。构建脚本会把当前 keystore 与已发布的 v0.3.2 APK 做证书指纹比对，并在签名完成后再次检查最终 APK；不一致时直接失败，绝不会静默生成一把无法覆盖安装的新钥匙。发布者应备份这个 keystore，丢失后无法继续签名可升级版本。
 
-如需使用 CI 或其他位置的密钥，可通过 `BAND_BRIDGE_KEYSTORE`、`BAND_BRIDGE_KEYSTORE_PASSWORD`、`BAND_BRIDGE_KEY_PASSWORD` 和 `BAND_BRIDGE_KEY_ALIAS` 指定。
+如需使用 CI 或其他位置的同一把密钥，可通过 `BAND_BRIDGE_KEYSTORE`、`BAND_BRIDGE_KEYSTORE_PASSWORD`、`BAND_BRIDGE_KEY_PASSWORD` 和 `BAND_BRIDGE_KEY_ALIAS` 指定；不要为升级包使用临时目录或新生成的 keystore。需要更换签名证书时，必须把它当作卸载重装版本单独发布，不能伪装成可覆盖升级。只有明确要创建全新安装分支时，才可设置 `BAND_BRIDGE_ALLOW_NEW_KEY=1`。
 
 ## 首次配置
 
