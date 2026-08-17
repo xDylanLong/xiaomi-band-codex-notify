@@ -5,14 +5,14 @@
 直接安装仓库中的 APK：
 
 ```bash
-$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/小米手环Codex通知-v0.3.2.apk
+$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/小米手环Codex通知-v0.3.4.apk
 ```
 
-如果手机中已有 v0.3.1 或更早版本，需要先卸载旧 App，再安装 v0.3.2；这是因为旧版本使用了不同签名。v0.3.2 及之后的版本会复用固定签名，可以直接覆盖升级。
+如果手机中已有 v0.3.1 或更早版本，需要先卸载旧 App，再安装 v0.3.4；这是因为旧版本使用了不同签名。v0.3.2 及之后的版本会复用固定签名，可以直接覆盖升级。
 
 也可以把 APK 传到 Android 手机后手动安装：
 
-`android-companion/releases/小米手环Codex通知-v0.3.2.apk`
+`android-companion/releases/小米手环Codex通知-v0.3.4.apk`
 
 打开 App 后：
 
@@ -94,7 +94,7 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出为 `android-companion/releases/小米手环Codex通知-v0.3.2.apk`。固定签名密钥默认保存在被 Git 忽略的 `android-companion/.signing/release.keystore`，请发布者自行备份，不要提交到公开仓库。
+脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出为 `android-companion/releases/小米手环Codex通知-v0.3.4.apk`。固定签名密钥默认保存在被 Git 忽略的 `android-companion/.signing/release.keystore`，请发布者自行备份，不要提交到公开仓库。
 
 ## 8. 排查
 

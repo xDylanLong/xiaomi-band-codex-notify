@@ -30,7 +30,7 @@ public final class NotificationPublisher {
     public static Notification serviceNotification(Context context) {
         ensureChannels(context);
         return new Notification.Builder(context, SERVICE_CHANNEL)
-                .setSmallIcon(productLogoResource(context))
+                .setSmallIcon(notificationIconResource(context))
                 .setLargeIcon(productLogo(context))
                 .setContentTitle("小米手环Codex通知")
                 .setContentText("LAN bridge running on port " + BridgeService.PORT)
@@ -43,7 +43,7 @@ public final class NotificationPublisher {
         Intent open = new Intent(context, MainActivity.class);
         PendingIntent pending = PendingIntent.getActivity(context, 0, open, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Notification.Builder builder = new Notification.Builder(context, MESSAGE_CHANNEL)
-                .setSmallIcon(productLogoResource(context))
+                .setSmallIcon(notificationIconResource(context))
                 .setLargeIcon(productLogo(context))
                 .setContentTitle("CODEX · XIAOMI")
                 .setContentText(body)
@@ -69,6 +69,11 @@ public final class NotificationPublisher {
 
     private static int productLogoResource(Context context) {
         return resourceId(context, "drawable", "logo");
+    }
+
+    private static int notificationIconResource(Context context) {
+        int icon = resourceId(context, "drawable", "ic_notification");
+        return icon != 0 ? icon : productLogoResource(context);
     }
 
     private static int resourceId(Context context, String type, String name) {

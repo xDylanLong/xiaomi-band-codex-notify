@@ -21,7 +21,7 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-输出文件为 `android-companion/releases/小米手环Codex通知-v0.3.2.apk`。
+输出文件为 `android-companion/releases/小米手环Codex通知-v0.3.4.apk`。
 
 ### 签名密钥
 
@@ -36,7 +36,7 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 3. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `小米手环Codex通知`。
 4. 记下 App 显示的 4 位 Codex 匹配码，按 [`../docs/usage.md`](../docs/usage.md) 安装 Plugin 并直接输入这 4 个数字。
 
-已有 APK：`releases/小米手环Codex通知-v0.3.2.apk`。如果手机已安装旧签名的 v0.3.1，需要先卸载一次再安装；之后版本可直接覆盖升级。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
+已有 APK：`releases/小米手环Codex通知-v0.3.4.apk`。如果手机已安装旧签名的 v0.3.1，需要先卸载一次再安装；之后版本可直接覆盖升级。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
 
 ## HTTP API
 

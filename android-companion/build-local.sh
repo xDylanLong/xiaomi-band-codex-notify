@@ -10,8 +10,9 @@ APP_DIR="$ROOT_DIR/android-companion/app"
 JAVA_BIN="$JAVA_HOME/bin"
 SDK_PLATFORM="$ANDROID_SDK_ROOT/platforms/android-35/android.jar"
 SDK_TOOLS="$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS"
-VERSION_CODE="${BAND_BRIDGE_VERSION_CODE:-5}"
-VERSION_NAME="${BAND_BRIDGE_VERSION_NAME:-0.3.2}"
+NOTIFICATION_ICON="$APP_DIR/src/main/res/drawable/ic_notification.xml"
+VERSION_CODE="${BAND_BRIDGE_VERSION_CODE:-7}"
+VERSION_NAME="${BAND_BRIDGE_VERSION_NAME:-0.3.4}"
 SIGNING_DIR="${BAND_BRIDGE_SIGNING_DIR:-$ROOT_DIR/android-companion/.signing}"
 KEYSTORE="${BAND_BRIDGE_KEYSTORE:-$SIGNING_DIR/release.keystore}"
 KEYSTORE_PASSWORD="${BAND_BRIDGE_KEYSTORE_PASSWORD:-android}"
@@ -19,6 +20,11 @@ KEY_PASSWORD="${BAND_BRIDGE_KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
 KEY_ALIAS="${BAND_BRIDGE_KEY_ALIAS:-xiaomi-band-codex-notify}"
 BASELINE_APK="${BAND_BRIDGE_BASELINE_APK:-$ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.2.apk}"
 APK_PATH="$ROOT_DIR/android-companion/releases/小米手环Codex通知-v${VERSION_NAME}.apk"
+
+if [[ ! -f "$NOTIFICATION_ICON" ]]; then
+  echo "Refusing to build: notification icon is missing at $NOTIFICATION_ICON." >&2
+  exit 1
+fi
 
 certificate_from_apk() {
   "$SDK_TOOLS/apksigner" verify --print-certs "$1" 2>/dev/null \

@@ -4,7 +4,7 @@
 
 **Goal:** Replace the current product logo and Android notification icon with a flat Apple-style original abstract mark connected by a recognizable smart-band strap, while preserving the existing notification and LAN bridge behavior and avoiding direct copies of third-party logos.
 
-**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains two newly invented abstract symbols, the exact labels `CODEX` and `XIAOMI`, and a blue smart-band strap with a dark capsule; it does not reproduce official ChatGPT/OpenAI or Xiaomi marks. Use the main logo resource for both notification `smallIcon` and `largeIcon`, add `roundIcon` metadata, and use the fixed message title `CODEX · XIAOMI` so band notifications remain identifiable if the color icon is not forwarded.
+**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains two newly invented abstract symbols, the exact labels `CODEX` and `XIAOMI`, and a blue smart-band strap with a dark capsule; it does not reproduce official ChatGPT/OpenAI or Xiaomi marks. Use a matching monochrome smart-band glyph for notification `smallIcon`, the main logo for `largeIcon`, add `roundIcon` metadata, and use the fixed message title `CODEX · XIAOMI` so band notifications remain identifiable if the color icon is not forwarded.
 
 **Tech Stack:** OpenAI built-in image generation, PNG assets, Android Java `Notification.Builder`, Android drawable XML/PNG, Gradle Android build, shell-based asset verification.
 
@@ -13,7 +13,7 @@
 - Style is flat, restrained, rounded geometric, Apple-inspired, with clear whitespace and no 3D modeling, complex shadows, or glossy lighting.
 - Two newly invented abstract symbols must appear and be connected by one recognizable smart-band strap with a central capsule.
 - The product logo is transparent-background, square, full-color, and shared by product, Android launcher, and plugin surfaces.
-- The product logo is used for Android `smallIcon` and `largeIcon`, with Android applying its notification rendering rules.
+- The monochrome smart-band glyph is used for Android `smallIcon`; the full-color product logo is used for `largeIcon` and launcher surfaces.
 - Do not change `applicationId`, package name, LAN protocol, pairing flow, notification permissions, or existing notification payload behavior.
 - Do not claim that Mi Fitness or the Xiaomi band will necessarily display the color logo; distinguish code/resource verification from real-device verification.
 
@@ -43,7 +43,7 @@
 
 ### Task 2: Use the product logo for Android notifications
 
-The implementation uses the synchronized `logo` resource for both `smallIcon` and `largeIcon`; Android applies its notification icon rendering rules to the `smallIcon`. No separate fallback vector resource is shipped.
+The implementation uses the synchronized `ic_notification` vector for `smallIcon` and the full-color `logo` resource for `largeIcon`. The build refuses to proceed if the notification glyph is missing.
 
 ### Task 3: Wire notification publishing to project assets
 
@@ -70,7 +70,7 @@ The implementation uses the synchronized `logo` resource for both `smallIcon` an
 
 - [x] Search for stale logo paths, default info icon references, and duplicate old logo files outside release APKs.
 - [x] Verify the three main PNG files have the same SHA-256 and preserve alpha.
-- [x] Verify the notification Java source uses the product `logo` for `smallIcon` and `largeIcon`.
+- [x] Verify the notification Java source uses `ic_notification` for `smallIcon` and the product `logo` for `largeIcon`.
 - [x] Confirm no documentation change is needed beyond the design/implementation records.
 
 ### Task 5: Build and report the real verification boundary
