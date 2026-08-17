@@ -1,6 +1,6 @@
 ---
 name: connect
-description: Connect the local Codex session to the 小米手环Codex通知 Android app over LAN. Use when the user says “连接我的小米手环”, pastes pairing information from the app, wants to test the band notification bridge, or asks to enable Codex completion notifications.
+description: Use when the user asks to initialize 小米手环Codex通知, invokes $connect, provides the GitHub repository URL, gives a four-digit pairing code, or wants Codex completion notifications on a Xiaomi Band.
 ---
 
 # Connect 小米手环Codex通知
@@ -9,9 +9,9 @@ Use this skill to configure the bundled Codex Stop hook without asking the user 
 
 ## Workflow
 
-1. Ask the user to open the `小米手环Codex通知` Android app and read the four-digit `Codex 匹配码`.
-2. Ask them to type only those four digits in the chat, for example `4821`. Treat the pairing code as a secret and never repeat it in your response or logs.
-3. Run the bundled pairing helper with the four-digit code:
+1. Extract the four-digit code from the user's initialization sentence. If it is missing, ask only for the code shown under `Codex 匹配码` in the Android app. Treat the pairing code as a secret and never repeat it in your response or logs.
+2. If the sentence includes `https://github.com/xDylanLong/xiaomi-band-codex-notify`, recognize it as the product reference. Do not clone that repository or ask the user to run repository commands; use the bundled helper below.
+3. Run the bundled pairing helper with the extracted four-digit code:
 
 ```bash
 python3 "${PLUGIN_ROOT}/scripts/pair.py" --code 4821 --test
@@ -19,7 +19,7 @@ python3 "${PLUGIN_ROOT}/scripts/pair.py" --code 4821 --test
 
 If `${PLUGIN_ROOT}` is unavailable in the shell, resolve the directory containing this plugin and run its `scripts/pair.py` directly. The helper discovers the phone over LAN, exchanges the pairing code for a token, and stores the returned token in private plugin data. Do not use the repository's legacy Node installer for the normal flow.
 
-4. Report only whether the bridge health check and test notification succeeded. If it fails, say that the computer and phone must be on the same Wi-Fi and ask the user to enter a fresh four-digit code.
+4. Report only whether initialization, bridge health check, and test notification succeeded. If it fails, say that the computer and phone must be on the same Wi-Fi and ask the user to enter a fresh four-digit code.
 5. Do not ask the user to type `/hooks`. Tell them that Codex may show a one-time security prompt for `发送小米手环通知`; they should choose `允许` if it appears. If no prompt appears, continue normally. Do not claim automatic notifications are active until the hook is trusted.
 
 ## Existing configuration
