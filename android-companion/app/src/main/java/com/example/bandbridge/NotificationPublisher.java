@@ -30,7 +30,8 @@ public final class NotificationPublisher {
     public static Notification serviceNotification(Context context) {
         ensureChannels(context);
         return new Notification.Builder(context, SERVICE_CHANNEL)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setLargeIcon(productLogo(context))
                 .setContentTitle("小米手环Codex通知")
                 .setContentText("LAN bridge running on port " + BridgeService.PORT)
                 .setOngoing(true)
@@ -42,7 +43,8 @@ public final class NotificationPublisher {
         Intent open = new Intent(context, MainActivity.class);
         PendingIntent pending = PendingIntent.getActivity(context, 0, open, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Notification.Builder builder = new Notification.Builder(context, MESSAGE_CHANNEL)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setLargeIcon(productLogo(context))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setStyle(new Notification.BigTextStyle().bigText(body))
@@ -59,5 +61,9 @@ public final class NotificationPublisher {
         }
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(nextId++, builder.build());
+    }
+
+    private static Bitmap productLogo(Context context) {
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.logo);
     }
 }
