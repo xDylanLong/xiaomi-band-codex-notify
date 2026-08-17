@@ -7,7 +7,7 @@
             "type": "command",
             "command": "python3 \"${PLUGIN_ROOT}/hooks/stop.py\"",
             "commandWindows": "py \"${PLUGIN_ROOT}/hooks/stop.py\"",
-            "async": true,
+            "async": false,
             "timeout": 5,
             "statusMessage": "发送小米手环通知"
           }
