@@ -43,7 +43,7 @@
 
 ### Task 2: Use the product logo for Android notifications
 
-The implementation uses the synchronized `ic_notification.png` bitmap for `smallIcon` and the full-color `logo` resource for `largeIcon`. The build refuses to proceed if the notification glyph is missing; the bitmap format is intentional for Mi Fitness compatibility.
+The implementation uses the synchronized `ic_notification.png` bitmap for `smallIcon`, a standard `mipmap-mdpi/ic_launcher.png` package icon for Mi Fitness application-icon lookup, and the full-color `logo` resource for `largeIcon`. The build refuses to proceed if either icon is missing.
 
 ### Task 3: Wire notification publishing to project assets
 
@@ -66,7 +66,7 @@ The implementation uses the synchronized `ic_notification.png` bitmap for `small
 
 **Interfaces:**
 - All existing logo consumers resolve to the synchronized main logo.
-- Android application launcher remains `@drawable/logo`.
+- Android application launcher uses a standard density-specific `@mipmap/ic_launcher` copy of the product logo.
 
 - [x] Search for stale logo paths, default info icon references, and duplicate old logo files outside release APKs.
 - [x] Verify the three main PNG files have the same SHA-256 and preserve alpha.

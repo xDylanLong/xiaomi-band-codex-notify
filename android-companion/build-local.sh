@@ -11,8 +11,9 @@ JAVA_BIN="$JAVA_HOME/bin"
 SDK_PLATFORM="$ANDROID_SDK_ROOT/platforms/android-35/android.jar"
 SDK_TOOLS="$ANDROID_SDK_ROOT/build-tools/$BUILD_TOOLS"
 NOTIFICATION_ICON="$APP_DIR/src/main/res/drawable/ic_notification.png"
-VERSION_CODE="${BAND_BRIDGE_VERSION_CODE:-8}"
-VERSION_NAME="${BAND_BRIDGE_VERSION_NAME:-0.3.5}"
+APPLICATION_ICON="$APP_DIR/src/main/res/mipmap-mdpi/ic_launcher.png"
+VERSION_CODE="${BAND_BRIDGE_VERSION_CODE:-9}"
+VERSION_NAME="${BAND_BRIDGE_VERSION_NAME:-0.3.6}"
 SIGNING_DIR="${BAND_BRIDGE_SIGNING_DIR:-$ROOT_DIR/android-companion/.signing}"
 KEYSTORE="${BAND_BRIDGE_KEYSTORE:-$SIGNING_DIR/release.keystore}"
 KEYSTORE_PASSWORD="${BAND_BRIDGE_KEYSTORE_PASSWORD:-android}"
@@ -23,6 +24,10 @@ APK_PATH="$ROOT_DIR/android-companion/releases/小米手环Codex通知-v${VERSIO
 
 if [[ ! -f "$NOTIFICATION_ICON" ]]; then
   echo "Refusing to build: notification icon is missing at $NOTIFICATION_ICON." >&2
+  exit 1
+fi
+if [[ ! -f "$APPLICATION_ICON" ]]; then
+  echo "Refusing to build: standard application icon is missing at $APPLICATION_ICON." >&2
   exit 1
 fi
 
