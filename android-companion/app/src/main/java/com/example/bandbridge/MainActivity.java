@@ -2,8 +2,6 @@ package com.example.bandbridge;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -23,21 +21,24 @@ import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class MainActivity extends Activity {
     static final String PREFS = "bridge_prefs";
     static final String TOKEN_KEY = "token";
     private TextView status;
+    private TextView pairingCodeView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        buildUi();
         getPairingCode();
+        buildUi();
         startBridge();
         requestNotificationPermissionIfNeeded();
         setStatus("bridge 已自动启动：电脑和手机连接同一 Wi-Fi 即可");
@@ -64,9 +65,15 @@ public class MainActivity extends Activity {
         status.setPadding(0, 0, 0, dp(14));
         content.addView(status, wrap());
 
-        content.addView(text("电脑端", 13, true), wrap());
-        content.addView(text("安装 Codex Plugin 后，把下面的配对信息粘贴给 Codex，并说：连接我的小米手环。", 13, false), wrap());
-        content.addView(buttonWithAction("复制 Codex 配对信息", view -> copy("小米手环Codex通知配对信息", pairingText())), wrap());
+        content.addView(text("Codex 匹配码", 13, true), wrap());
+        pairingCodeView = text(getPairingCode(), 34, true);
+        pairingCodeView.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+        pairingCodeView.setGravity(Gravity.CENTER);
+        pairingCodeView.setLetterSpacing(0.18f);
+        pairingCodeView.setPadding(0, dp(7), 0, dp(3));
+        content.addView(pairingCodeView, wrap());
+        content.addView(text("在 Codex 中直接输入这 4 个数字，例如：连接我的小米手环，匹配码 4821", 13, false), wrap());
+        content.addView(buttonWithAction("刷新匹配码", view -> refreshPairingCode()), wrap());
 
         content.addView(text("手机端", 13, true), wrap());
         content.addView(buttonWithAction("发送测试通知", view -> sendTestNotification()), wrap());
@@ -81,13 +88,6 @@ public class MainActivity extends Activity {
         ScrollView scroll = new ScrollView(this);
         scroll.addView(content);
         setContentView(scroll);
-    }
-
-    private String pairingText() {
-        return "小米手环Codex通知配对信息\n" +
-                "host=" + firstHost() + "\n" +
-                "port=" + BridgeService.PORT + "\n" +
-                "code=" + getPairingCode();
     }
 
     private void sendTestNotification() {
@@ -118,12 +118,6 @@ public class MainActivity extends Activity {
             final int result = code;
             runOnUiThread(() -> setStatus(result == 202 ? "测试通知已发送，请检查手环" : "测试失败，请确认 bridge 已运行"));
         }, "band-test-notification").start();
-    }
-
-    private void copy(String label, String value) {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText(label, value));
-        setStatus("已复制配对信息，请粘贴给 Codex");
     }
 
     private void startBridge() {
@@ -158,11 +152,25 @@ public class MainActivity extends Activity {
     private String getPairingCode() {
         android.content.SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         String code = prefs.getString(BridgeService.PAIRING_CODE_KEY, null);
-        if (code == null) {
-            code = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        if (code == null || !code.matches("\\d{4}")) {
+            code = newPairingCode();
             prefs.edit().putString(BridgeService.PAIRING_CODE_KEY, code).apply();
         }
         return code;
+    }
+
+    private String newPairingCode() {
+        return String.format(Locale.US, "%04d", new SecureRandom().nextInt(10000));
+    }
+
+    private void refreshPairingCode() {
+        String code = newPairingCode();
+        getSharedPreferences(PREFS, MODE_PRIVATE).edit()
+                .putString(BridgeService.PAIRING_CODE_KEY, code)
+                .apply();
+        if (pairingCodeView != null) pairingCodeView.setText(code);
+        startBridge();
+        setStatus("匹配码已刷新，请在 Codex 中输入新的 4 位数字");
     }
 
     private String firstHost() {

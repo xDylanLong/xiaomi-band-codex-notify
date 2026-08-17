@@ -5,19 +5,19 @@
 直接安装仓库中的 Debug APK：
 
 ```bash
-$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/小米手环Codex通知-v0.3.0.apk
+$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/小米手环Codex通知-v0.3.1.apk
 ```
 
 也可以把 APK 传到 Android 手机后手动安装：
 
-`android-companion/releases/小米手环Codex通知-v0.3.0.apk`
+`android-companion/releases/小米手环Codex通知-v0.3.1.apk`
 
 打开 App 后：
 
 1. 允许通知权限；
 2. 确认电脑和手机在同一个局域网；
 3. App 会自动启动 LAN bridge；
-4. 点击“复制 Codex 配对信息”，稍后粘贴给 Codex。
+4. 记下 App 中显示的 4 位“Codex 匹配码”。
 
 ## 2. 配置 Mi Fitness
 
@@ -40,13 +40,15 @@ codex /plugins
 
 在 Codex 桌面端也可以直接从 Plugins Directory 添加 `xDylanLong/xiaomi-band-codex-notify`。安装后新开一个 Codex 会话。
 
-回到 App 点击“复制 Codex 配对信息”，粘贴给 Codex，并说：
+回到 App 查看 4 位匹配码，并在 Codex 中输入：
 
 ```text
-连接我的小米手环
+连接我的小米手环，匹配码 4821
 ```
 
-Plugin 会自动检查手机、保存私有配置并发送测试通知。然后在 Codex 中执行 `/hooks`，审核并信任“发送小米手环通知”。如果手机 IP 变化，重新复制配对信息并再次执行连接即可。
+Plugin 会通过局域网自动发现手机、保存私有配置并发送测试通知。然后在 Codex 中执行 `/hooks`，审核并信任“发送小米手环通知”。如果换 Wi-Fi 或点击了“刷新匹配码”，重新输入新的 4 位数字即可。
+
+4 位匹配码只用于可信局域网内的首次配对，不是高强度密码；App 会限制成功发现响应次数，并提供刷新按钮。token 不会显示在 App 界面，也不需要用户复制。
 
 ## 4. 从电脑手动发送通知（开发者）
 
@@ -93,12 +95,12 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出为 `android-companion/releases/小米手环Codex通知-v0.3.0.apk`。
+脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出为 `android-companion/releases/小米手环Codex通知-v0.3.1.apk`。
 
 ## 8. 排查
 
-- `health` 连接失败：确认手机和电脑同一 Wi-Fi，并重新从 App 复制配对信息。
-- HTTP 401：重新复制配对信息，让 Plugin 更新私有配置。
+- `health` 连接失败：确认手机和电脑同一 Wi-Fi，并重新输入 App 显示的 4 位匹配码。
+- HTTP 401：点击 App 的“刷新匹配码”，再让 Plugin 使用新数字配对。
 - 手机收到但手环没有：检查 Mi Fitness 的 App 通知开关、蓝牙连接、手环勿扰模式和手机后台限制。
 - Codex 没有自动通知：确认 Plugin 已安装、已完成“连接我的小米手环”，并在 Codex `/hooks` 中信任 hook；当前 Codex `exec` 非交互模式可能不会触发 `Stop` hook，交互式 Codex 任务优先使用。
 - 电脑重启后：重新打开 Android App；bridge 会自动启动。

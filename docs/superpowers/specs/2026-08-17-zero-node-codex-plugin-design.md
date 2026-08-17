@@ -17,8 +17,8 @@
 ### Android App
 
 - Activity 打开时自动启动 `BridgeService`，并保留服务状态提示。
-- 主界面只保留：bridge 状态、复制配对信息、发送测试通知、打开 Mi Fitness 通知设置。
-- 配对信息是可粘贴到 Codex 的一段文本，包含局域网地址和一次性配对码；App 不把 Bearer token 放进剪贴板。
+- 主界面只保留：bridge 状态、4 位 Codex 匹配码、刷新匹配码、发送测试通知、打开 Mi Fitness 通知设置。
+- 配对使用 4 位数字和 UDP 局域网自动发现；App 不把 IP、Bearer token 或配对文本放进剪贴板。
 - Plugin 通过局域网 `/v1/pair` 用配对码换取 token，再把 token 写入插件私有数据目录。
 - 现有的可选手机通知监听继续保留，但放入“高级选项”，避免和 Codex Plugin 产生重复通知。
 
@@ -29,7 +29,7 @@
 - `.codex-plugin/plugin.json`：插件元数据、skill 路径和 hook 路径。
 - `hooks/hooks.json`：异步 `Stop` hook，命令使用系统 Python，不依赖 Node。
 - `hooks/stop.py`：读取 Codex Stop JSON，读取 `PLUGIN_DATA/config.json`，向 Android bridge 发送摘要通知；失败静默，不阻塞 Codex。
-- `skills/connect/SKILL.md`：当用户说“连接我的小米手环”或粘贴配对信息时，指导 Codex 验证 bridge、写入 `PLUGIN_DATA/config.json`、发送测试通知，并提示 `/hooks` 审核。
+- `skills/connect/SKILL.md`：当用户说“连接我的小米手环”并提供 4 位匹配码时，指导 Codex 通过局域网发现 bridge、写入 `PLUGIN_DATA/config.json`、发送测试通知，并提示 `/hooks` 审核。
 - `assets/logo.png`：复用产品 logo。
 
 ### Marketplace 与文档
@@ -43,7 +43,8 @@
 ```text
 Android App 打开
   → 自动启动 BridgeService :8787
-  → App 复制配对文本
+  → App 显示 4 位匹配码
+  → Plugin UDP 广播发现手机
   → Codex Plugin Skill 验证 /v1/health 并保存 PLUGIN_DATA/config.json
   → Codex Stop hook 读取 last_assistant_message
   → POST /v1/notify

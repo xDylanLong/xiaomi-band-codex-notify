@@ -23,8 +23,8 @@ mkdir -p "$BUILD_DIR/classes" "$BUILD_DIR/dex" "$BUILD_DIR/apk" "$ROOT_DIR/andro
   -I "$SDK_PLATFORM" \
   --min-sdk-version 26 \
   --target-sdk-version 35 \
-  --version-code 3 \
-  --version-name 0.3.0 \
+  --version-code 4 \
+  --version-name 0.3.1 \
   --auto-add-overlay \
   -R "$BUILD_DIR/compiled-res.zip"
 cp "$BUILD_DIR/apk/unsigned.apk" "$BUILD_DIR/apk/with-dex.apk"
@@ -38,6 +38,6 @@ fi
 "$SDK_TOOLS/zipalign" -f -p 4 "$BUILD_DIR/apk/with-dex.apk" "$BUILD_DIR/apk/aligned.apk"
 "$SDK_TOOLS/apksigner" sign --ks "$KEYSTORE" --ks-pass pass:android --key-pass pass:android \
   --ks-key-alias androiddebugkey --v4-signing-enabled false \
-  --out "$ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.0.apk" "$BUILD_DIR/apk/aligned.apk"
-"$SDK_TOOLS/apksigner" verify "$ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.0.apk"
-echo "Built $ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.0.apk"
+  --out "$ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.1.apk" "$BUILD_DIR/apk/aligned.apk"
+"$SDK_TOOLS/apksigner" verify "$ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.1.apk"
+echo "Built $ROOT_DIR/android-companion/releases/小米手环Codex通知-v0.3.1.apk"

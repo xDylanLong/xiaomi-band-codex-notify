@@ -1,6 +1,7 @@
 import http.server
 import json
 import socketserver
+import socket
 import sys
 import tempfile
 import threading
@@ -11,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from band_config import build_notification, config_path, config_candidates, parse_pairing, read_config, request, send_notification, write_config
+from band_config import build_notification, config_path, config_candidates, discover, parse_pairing, read_config, request, send_notification, write_config
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -40,9 +41,10 @@ class HookTests(unittest.TestCase):
         self.assertEqual(len(long_payload["body"]), 1200)
 
     def test_pairing_and_private_config(self):
-        pairing = parse_pairing("小米手环Codex通知配对信息\nhost=127.0.0.1\nport=8787\ncode=pair-code")
+        pairing = parse_pairing("小米手环Codex通知配对信息\nhost=127.0.0.1\nport=8787\ncode=1234")
         self.assertEqual(pairing["host"], "127.0.0.1")
-        self.assertEqual(pairing["code"], "pair-code")
+        self.assertEqual(pairing["code"], "1234")
+        self.assertEqual(parse_pairing("code=1234"), {"port": 8787, "code": "1234"})
         config = {"host": "127.0.0.1", "port": 8787, "token": "secret"}
         with tempfile.TemporaryDirectory() as directory:
             env = {"PLUGIN_DATA": directory}
@@ -58,8 +60,8 @@ class HookTests(unittest.TestCase):
             thread = threading.Thread(target=server.serve_forever, daemon=True)
             thread.start()
             port = server.server_address[1]
-            pairing = {"host": "127.0.0.1", "port": port, "code": "pair-code"}
-            status, response = request(pairing, "POST", "/v1/pair", {"code": "pair-code"}, authenticate=False)
+            pairing = {"host": "127.0.0.1", "port": port, "code": "1234"}
+            status, response = request(pairing, "POST", "/v1/pair", {"code": "1234"}, authenticate=False)
             self.assertEqual(status, 200)
             self.assertEqual(json.loads(response)["token"], "secret")
             config = {"host": "127.0.0.1", "port": port, "token": "secret"}
@@ -68,6 +70,32 @@ class HookTests(unittest.TestCase):
         self.assertEqual(Handler.requests[1][0], "/v1/notify")
         self.assertEqual(Handler.requests[1][1], "Bearer secret")
         self.assertEqual(Handler.requests[1][2]["body"], "完成")
+
+    def test_udp_discovery(self):
+        server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        server.bind(("127.0.0.1", 0))
+        port = server.getsockname()[1]
+
+        def reply():
+            data, address = server.recvfrom(2048)
+            self.assertEqual(json.loads(data)["code"], "1234")
+            response = json.dumps({
+                "ok": True,
+                "service": "xiaomi-band-codex-notify",
+                "host": "127.0.0.1",
+                "port": 8787,
+            }).encode("utf-8")
+            server.sendto(response, address)
+
+        thread = threading.Thread(target=reply, daemon=True)
+        thread.start()
+        original_port = __import__("band_config").DISCOVERY_PORT
+        __import__("band_config").DISCOVERY_PORT = port
+        try:
+            self.assertEqual(discover("1234", timeout=1, broadcast_host="127.0.0.1")["host"], "127.0.0.1")
+        finally:
+            __import__("band_config").DISCOVERY_PORT = original_port
+            server.close()
 
 
 if __name__ == "__main__":

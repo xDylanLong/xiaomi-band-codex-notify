@@ -1,12 +1,15 @@
 import json
 import os
 import re
+import socket
+import time
 import urllib.request
 from pathlib import Path
 
 
 MAX_BODY_LENGTH = 1200
 DEFAULT_PORT = 8787
+DISCOVERY_PORT = 8788
 
 
 def build_notification(event):
@@ -49,11 +52,13 @@ def parse_pairing(text):
 
 
 def normalize_pairing(value):
-    base = normalize_host_port(value)
     token = str(value.get("token") or "").strip()
     code = str(value.get("code") or value.get("pairing_code") or "").strip()
     if not token and not code:
         raise ValueError("配对信息缺少配对码")
+    if code and not re.fullmatch(r"\d{4}", code):
+        raise ValueError("配对码必须是 4 位数字")
+    base = normalize_host_port(value) if token or value.get("host") or value.get("ip") else {"port": DEFAULT_PORT}
     if token:
         base["token"] = token
     else:
@@ -144,3 +149,35 @@ def request(config, method, path, payload=None, timeout=2.5, authenticate=True):
 def send_notification(config, payload):
     status, _ = request(config, "POST", "/v1/notify", payload)
     return status in (200, 202)
+
+
+def discover(code, timeout=2.5, broadcast_host="255.255.255.255", socket_factory=socket.socket):
+    """Find the phone on the local LAN using the four-digit pairing code."""
+    if not re.fullmatch(r"\d{4}", str(code or "")):
+        raise ValueError("配对码必须是 4 位数字")
+    sock = socket_factory(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        sock.settimeout(0.35)
+        payload = json.dumps({"type": "discover", "code": code}, ensure_ascii=False).encode("utf-8")
+        sock.sendto(payload, (broadcast_host, DISCOVERY_PORT))
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            try:
+                raw, address = sock.recvfrom(2048)
+            except socket.timeout:
+                continue
+            try:
+                response = json.loads(raw.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError):
+                continue
+            if response.get("ok") is not True or response.get("service") != "xiaomi-band-codex-notify":
+                continue
+            host = str(response.get("host") or address[0]).strip()
+            port = str(response.get("port") or DEFAULT_PORT)
+            result = normalize_host_port({"host": host, "port": port})
+            result["code"] = code
+            return result
+    finally:
+        sock.close()
+    raise RuntimeError("未发现小米手环 App，请确认手机和电脑连接同一 Wi-Fi，并保持 App 打开")

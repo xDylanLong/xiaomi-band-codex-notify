@@ -1,6 +1,6 @@
 {
   "name": "xiaomi-band-codex-notify",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Connect Codex task completion notifications to a Xiaomi Smart Band over LAN without Node.",
   "author": {
     "name": "Dylan Long",

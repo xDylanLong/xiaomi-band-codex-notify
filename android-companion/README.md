@@ -21,16 +21,16 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-输出文件为 `android-companion/releases/小米手环Codex通知-v0.3.0.apk`。
+输出文件为 `android-companion/releases/小米手环Codex通知-v0.3.1.apk`。
 
 ## 首次配置
 
 1. 安装并打开 App，按系统提示允许通知权限。
 2. App 会自动启动 LAN bridge；电脑与手机连接同一个局域网。
 3. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `小米手环Codex通知`。
-4. 点击“复制 Codex 配对信息”，按 [`../docs/usage.md`](../docs/usage.md) 安装 Plugin 并把信息粘贴给 Codex。
+4. 记下 App 显示的 4 位 Codex 匹配码，按 [`../docs/usage.md`](../docs/usage.md) 安装 Plugin 并直接输入这 4 个数字。
 
-已有 APK：`releases/小米手环Codex通知-v0.3.0.apk`。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
+已有 APK：`releases/小米手环Codex通知-v0.3.1.apk`。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
 
 ## HTTP API
 
@@ -39,7 +39,8 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ## 安全模型
 
 - 服务只建议在可信局域网运行。
-- 所有接口要求 Bearer token。
+- 通知和健康接口要求 Bearer token；首次配对使用局域网 4 位匹配码，token 由 App 自动换取并保存在 Codex 私有配置中。
+- UDP `8788` 只响应正确匹配码，并按来源限制响应次数；刷新 App 匹配码即可使旧码失效。
 - token 保存在 Android 私有 SharedPreferences 中。
 - 没有云服务、账号登录、端口转发或公网监听设计。
 - Codex hook 只在任务结束时发送摘要，不会读取或上传完整 transcript。

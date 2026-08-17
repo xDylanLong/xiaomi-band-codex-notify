@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import sys
 
-import json
-
-from band_config import parse_pairing, request, send_notification, write_config
+from band_config import discover, parse_pairing, request, send_notification, write_config
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Pair 小米手环Codex通知 with Codex")
-    parser.add_argument("--text", help="Pairing block copied from the Android app")
+    parser.add_argument("--code", help="Four-digit code shown by the Android app")
+    parser.add_argument("--text", help="Legacy pairing block containing host and code")
     parser.add_argument("--test", action="store_true", help="Send a test notification after pairing")
     args = parser.parse_args(argv)
-    text = args.text if args.text is not None else sys.stdin.read()
     try:
-        pairing = parse_pairing(text)
+        if args.code:
+            pairing = parse_pairing(json.dumps({"code": args.code}))
+        else:
+            text = args.text if args.text is not None else sys.stdin.read()
+            pairing = parse_pairing(text)
         if "token" in pairing:
             config = pairing
         else:
+            if "host" not in pairing:
+                pairing = discover(pairing["code"])
             status, response = request(pairing, "POST", "/v1/pair", {"code": pairing["code"]}, authenticate=False)
             if status != 200:
                 raise RuntimeError("配对码无效")

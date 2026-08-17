@@ -11,9 +11,11 @@ import java.util.Locale;
 
 public class BridgeService extends Service implements BridgeHttpServer.Handler {
     public static final int PORT = 8787;
+    public static final int DISCOVERY_PORT = DiscoveryServer.PORT;
     public static final String EXTRA_TOKEN = "token";
     public static final String PAIRING_CODE_KEY = "pairing_code";
     private BridgeHttpServer server;
+    private DiscoveryServer discoveryServer;
     private String token;
     private String pairingCode;
 
@@ -28,10 +30,16 @@ public class BridgeService extends Service implements BridgeHttpServer.Handler {
     public int onStartCommand(Intent intent, int flags, int startId) {
         token = intent != null ? intent.getStringExtra(EXTRA_TOKEN) : null;
         if (token == null) token = getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE).getString(MainActivity.TOKEN_KEY, "");
-        pairingCode = getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE).getString(PAIRING_CODE_KEY, "");
+        String nextPairingCode = getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE).getString(PAIRING_CODE_KEY, "");
         if (server == null) {
             server = new BridgeHttpServer(PORT, token, this);
             server.start();
+        }
+        if (discoveryServer == null || !nextPairingCode.equals(pairingCode)) {
+            if (discoveryServer != null) discoveryServer.stop();
+            pairingCode = nextPairingCode;
+            discoveryServer = new DiscoveryServer(DISCOVERY_PORT, pairingCode);
+            discoveryServer.start();
         }
         return START_STICKY;
     }
@@ -39,7 +47,9 @@ public class BridgeService extends Service implements BridgeHttpServer.Handler {
     @Override
     public void onDestroy() {
         if (server != null) server.stop();
+        if (discoveryServer != null) discoveryServer.stop();
         server = null;
+        discoveryServer = null;
         super.onDestroy();
     }
 

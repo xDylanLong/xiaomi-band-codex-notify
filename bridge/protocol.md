@@ -7,6 +7,22 @@ Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
+## LAN pairing discovery
+
+The Android app also listens on UDP `8788` for a LAN-only discovery packet. The
+normal Plugin sends the four-digit code shown in the app, so users do not need
+to copy an IP address or token:
+
+```json
+{"type":"discover","code":"4821"}
+```
+
+The phone responds only when the code matches, with its LAN host and HTTP
+port. The Plugin then calls `POST /v1/pair` to exchange the code for the
+private Bearer token. The four-digit code is a convenience credential for a
+trusted LAN, not a strong password; the app limits responses and supports code
+refresh.
+
 ## Health
 
 ```http

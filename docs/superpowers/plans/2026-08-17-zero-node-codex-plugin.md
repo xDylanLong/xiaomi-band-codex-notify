@@ -4,7 +4,7 @@
 
 **Goal:** 将小米手环Codex通知改造成 Android App 自动启动 bridge、Codex Plugin 自动发送 Stop 通知、用户无需接触 Node 的公开产品。
 
-**Architecture:** Android App 负责局域网 bridge 生命周期和一次性配对信息；Codex Plugin 负责 Skill 配置与 Python Stop hook。Hook 从插件的 `PLUGIN_DATA` 读取私有配置，向手机 `8787` 端口发送通知。仓库 marketplace 负责公开发现和安装。
+**Architecture:** Android App 负责局域网 bridge 生命周期和 4 位匹配码发现；Codex Plugin 负责 Skill 配置与 Python Stop hook。Hook 从插件的 `PLUGIN_DATA` 读取私有配置，向手机 `8787` 端口发送通知。仓库 marketplace 负责公开发现和安装。
 
 **Tech Stack:** Java Android SDK 35、Python 3 标准库、Codex Plugin manifest、Codex hooks.json、Markdown、GitHub Releases。
 
@@ -30,7 +30,7 @@
 - Test: `plugins/xiaomi-band-codex-notify/.codex-plugin/plugin.json` with plugin validator
 
 **Interfaces:**
-- Produces plugin name `xiaomi-band-codex-notify`, version `0.3.0`, default hook path `./hooks/hooks.json`, skill path `./skills/`, and marketplace source path `./plugins/xiaomi-band-codex-notify`.
+- Produces plugin name `xiaomi-band-codex-notify`, version `0.3.1`, default hook path `./hooks/hooks.json`, skill path `./skills/`, and marketplace source path `./plugins/xiaomi-band-codex-notify`.
 
 - [ ] **Step 1: Scaffold the plugin directory**
 
@@ -42,7 +42,7 @@ Use the manifest paths `"skills": "./skills/"`, `"hooks": "./hooks/hooks.json"`,
 
 - [ ] **Step 3: Write the connect skill**
 
-The skill must trigger on “连接我的小米手环”, instruct Codex to accept a pasted `小米手环Codex通知配对信息` block, call the bundled setup helper or write the plugin data config, verify `/v1/health`, send one test notification, and tell the user to open `/hooks` once.
+The skill must trigger on “连接我的小米手环”, ask for the four-digit code shown by the Android app, call the bundled LAN discovery helper, write the plugin data config, verify `/v1/health`, send one test notification, and tell the user to open `/hooks` once.
 
 - [ ] **Step 4: Validate the plugin package**
 
@@ -108,7 +108,7 @@ Retain App notification settings and Mi Fitness instructions; move Notification 
 
 - [ ] **Step 4: Rebuild and inspect the APK**
 
-Build with the bundled JDK 17 and Android SDK 35, then verify application label, icon, version `0.3.0`, and APK v2/v3 signatures.
+Build with the bundled JDK 17 and Android SDK 35, then verify application label, icon, version `0.3.1`, and APK v2/v3 signatures.
 
 ### Task 4: Rewrite public README and usage flow
 
@@ -136,7 +136,7 @@ Keep the old Node hook and CLI documented under an advanced/developer section on
 
 Search for old product names, absolute local paths, the sample token, and normal-flow Node instructions; fix every public occurrence.
 
-### Task 5: Validate, commit, publish v0.3.0
+### Task 5: Validate, commit, publish v0.3.1
 
 **Files:**
 - Modify: `README.md`, plugin package, Android sources, and release metadata as required by prior tasks.
@@ -155,4 +155,4 @@ Commit with `feat: add zero-node Codex plugin onboarding`.
 
 - [ ] **Step 4: Push and publish**
 
-Push to the public repository, create/update the `v0.3.0` Release with an ASCII APK asset name, and verify the public download URL.
+Push to the public repository, create/update the `v0.3.1` Release with an ASCII APK asset name, and verify the public download URL.
