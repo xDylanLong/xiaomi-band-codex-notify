@@ -38,9 +38,9 @@
 - Produces a transparent PNG that all product surfaces consume.
 - The final file must contain both Codex and Xiaomi symbols and one connecting band.
 
-- [ ] Generate a square, transparent, flat Apple-style logo with no text, watermark, extra device, or background scene.
-- [ ] Inspect the generated image for both marks, the connecting band, clean alpha edges, and legibility at small size.
-- [ ] Copy the selected image to all three product paths and verify the files are byte-identical.
+- [x] Generate a square, transparent, flat Apple-style logo with no text, watermark, extra device, or background scene.
+- [x] Inspect the generated image for both marks, the connecting band, clean alpha edges, and legibility at small size.
+- [x] Copy the selected image to all three product paths and verify the files are byte-identical.
 
 ### Task 2: Add the Android notification glyph
 
@@ -51,9 +51,9 @@
 - Produces a valid Android drawable resource named `ic_notification`.
 - The resource is a transparent, white, high-contrast silhouette derived from the same two-symbol-and-band concept.
 
-- [ ] Define a 24dp vector drawable with a solid white silhouette, rounded geometry, and no color-dependent detail.
-- [ ] Keep the glyph simple enough to survive Android status-bar masking and Mi Fitness notification forwarding.
-- [ ] Run Android resource validation through the existing Gradle build before wiring the Java code.
+- [x] Define a 24dp vector drawable with a solid white silhouette, rounded geometry, and no color-dependent detail.
+- [x] Keep the glyph simple enough to survive Android status-bar masking and Mi Fitness notification forwarding.
+- [x] Run Android resource validation through the existing manual Android build.
 
 ### Task 3: Wire notification publishing to project assets
 
@@ -64,10 +64,10 @@
 - `serviceNotification(Context)` continues returning the foreground-service `Notification`.
 - `publish(Context, String, String, String, String)` keeps the existing signature and payload behavior.
 
-- [ ] Replace both `android.R.drawable.ic_dialog_info` references with `R.drawable.ic_notification`.
-- [ ] Decode `R.drawable.logo` once per notification path or through a small private helper and pass it to `setLargeIcon` without changing title/body/style logic.
-- [ ] Keep BigText, BigPicture, pending intent, category, priority, channel IDs, and notification IDs unchanged.
-- [ ] Compile the Android module to catch resource and API-level errors.
+- [x] Replace both `android.R.drawable.ic_dialog_info` references with a project resource lookup for `ic_notification`, preserving compatibility with the manual build's lack of generated `R.java`.
+- [x] Decode the `logo` resource through a private helper and pass it to `setLargeIcon` without changing title/body/style logic.
+- [x] Keep BigText, BigPicture, pending intent, category, priority, channel IDs, and notification IDs unchanged.
+- [x] Compile the Android module and build the APK successfully.
 
 ### Task 4: Verify product/resource integration
 
@@ -78,10 +78,10 @@
 - All existing logo consumers resolve to the synchronized main logo.
 - Android application launcher remains `@drawable/logo`.
 
-- [ ] Search for stale logo paths, default info icon references, and duplicate old logo files outside release APKs.
-- [ ] Verify the three main PNG files have the same SHA-256 and preserve alpha.
-- [ ] Verify the notification Java source references only the project glyph for `smallIcon`.
-- [ ] Update documentation only where the new logo/icon behavior changes an existing statement.
+- [x] Search for stale logo paths, default info icon references, and duplicate old logo files outside release APKs.
+- [x] Verify the three main PNG files have the same SHA-256 and preserve alpha.
+- [x] Verify the notification Java source references only the project glyph for `smallIcon`.
+- [x] Confirm no documentation change is needed beyond the design/implementation records.
 
 ### Task 5: Build and report the real verification boundary
 
@@ -91,10 +91,10 @@
 **Interfaces:**
 - Produces a successfully built debug APK without changing package/application identity.
 
-- [ ] Run the existing Android build command from `android-companion/`.
-- [ ] Inspect the APK manifest for the unchanged application ID and app label.
-- [ ] Confirm the APK contains `logo` and `ic_notification` resources and no build errors.
-- [ ] Report separately what was verified statically, what was verified by APK build, and what still requires a physical Android phone, Mi Fitness, and Xiaomi band.
+- [x] Run the existing Android build command from `android-companion/`.
+- [x] Inspect the APK manifest for the unchanged application ID and app label.
+- [x] Confirm the APK contains `logo` and `ic_notification` resources and no build errors.
+- [x] Report separately what was verified statically, what was verified by APK build, and what still requires a physical Android phone, Mi Fitness, and Xiaomi band.
 
 ## Commit Checkpoints
 
