@@ -4,7 +4,7 @@
 
 **Goal:** Replace the current product logo and Android notification icon with a flat Apple-style original abstract mark connected by a recognizable smart-band strap, while preserving the existing notification and LAN bridge behavior and avoiding direct copies of third-party logos.
 
-**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains two newly invented abstract symbols, the exact labels `CODEX` and `XIAOMI`, and a blue smart-band strap with a dark capsule; it does not reproduce official ChatGPT/OpenAI or Xiaomi marks. Add a deterministic monochrome Android notification glyph for `smallIcon`, load the color logo as `largeIcon`, and use the fixed message title `CODEX · XIAOMI` so band notifications remain identifiable if the color icon is not forwarded.
+**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains two newly invented abstract symbols, the exact labels `CODEX` and `XIAOMI`, and a blue smart-band strap with a dark capsule; it does not reproduce official ChatGPT/OpenAI or Xiaomi marks. Use the main logo resource for both notification `smallIcon` and `largeIcon`, add `roundIcon` metadata, and use the fixed message title `CODEX · XIAOMI` so band notifications remain identifiable if the color icon is not forwarded.
 
 **Tech Stack:** OpenAI built-in image generation, PNG assets, Android Java `Notification.Builder`, Android drawable XML/PNG, Gradle Android build, shell-based asset verification.
 
@@ -19,7 +19,7 @@
 
 ## Files and Responsibilities
 
-- Create: `android-companion/app/src/main/res/drawable/ic_notification.xml` — deterministic white notification silhouette.
+- Create: `android-companion/app/src/main/res/drawable/ic_notification.xml` — deterministic white notification silhouette retained as a compatibility fallback.
 - Modify: `assets/logo.png` — full-color product logo.
 - Modify: `android-companion/app/src/main/res/drawable/logo.png` — byte-identical Android launcher logo.
 - Modify: `plugins/xiaomi-band-codex-notify/assets/logo.png` — byte-identical plugin logo.
@@ -64,7 +64,7 @@
 - `serviceNotification(Context)` continues returning the foreground-service `Notification`.
 - `publish(Context, String, String, String, String)` keeps the existing signature and payload behavior.
 
-- [x] Replace both `android.R.drawable.ic_dialog_info` references with a project resource lookup for `ic_notification`, preserving compatibility with the manual build's lack of generated `R.java`.
+- [x] Replace both `android.R.drawable.ic_dialog_info` references with a project resource lookup for the main `logo`, preserving compatibility with the manual build's lack of generated `R.java` and ensuring Mi Fitness receives the product resource.
 - [x] Decode the `logo` resource through a private helper and pass it to `setLargeIcon` while preserving the body/style logic.
 - [x] Keep BigText, BigPicture, pending intent, category, priority, channel IDs, and notification IDs unchanged; fix the message title to `CODEX · XIAOMI` while retaining the task summary as body text.
 - [x] Compile the Android module and build the APK successfully.
@@ -80,7 +80,7 @@
 
 - [x] Search for stale logo paths, default info icon references, and duplicate old logo files outside release APKs.
 - [x] Verify the three main PNG files have the same SHA-256 and preserve alpha.
-- [x] Verify the notification Java source references only the project glyph for `smallIcon`.
+- [x] Verify the notification Java source uses the product `logo` for `smallIcon` and `largeIcon`.
 - [x] Confirm no documentation change is needed beyond the design/implementation records.
 
 ### Task 5: Build and report the real verification boundary

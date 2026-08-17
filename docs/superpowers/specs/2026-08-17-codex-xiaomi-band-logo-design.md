@@ -13,7 +13,7 @@
 - 识别文字：左侧模块表面加入清晰的 `CODEX`，右侧模块表面加入清晰的 `XIAOMI`；文字是主要识别辅助，不依赖官方 logo 图形。
 - 色彩：左侧使用深炭色与白色，右侧使用暖橙色与白色，手环表带使用项目现有的蓝色，表盘使用深炭色；颜色数量保持足够少，缩小后仍可辨认。
 - 主 logo：透明背景、方形构图、中心主体占画布大部分，适合产品首页、README、Android launcher 和插件资源。
-- 通知 glyph：从同一构图提炼出高对比度的白色单色手环轮廓，透明背景，避免细线、文字和无法在 24dp 中识别的细节。
+- 通知兼容资源：保留高对比度单色手环 glyph 作为 APK 内备用资源；实际通知 `smallIcon` 使用主 logo 的 alpha 轮廓，避免 Mi Fitness 取到系统默认 Android 图标。
 
 ## 资源与引用范围
 
@@ -29,13 +29,13 @@
 
 ### Android 通知图标
 
-新增 Android 专用单色 drawable 资源，例如 `android-companion/app/src/main/res/drawable/ic_notification.xml` 或等价的透明 PNG。通知发布逻辑不再使用 `android.R.drawable.ic_dialog_info`，改用项目自己的通知 glyph。
+新增 Android 专用单色 drawable 资源，例如 `android-companion/app/src/main/res/drawable/ic_notification.xml` 或等价的透明 PNG。通知发布逻辑不再使用 `android.R.drawable.ic_dialog_info`；实际通知使用主 logo 资源，兼容 glyph 作为备用。
 
 通知构建器同时设置彩色主 logo 作为 `largeIcon`（在 Android/手机通知界面可用时展示），但不依赖 `largeIcon` 作为小米手环最终显示的保证；Mi Fitness 和手环固件是否展示大图仍遵循现有产品说明中的真实边界。
 
 ## Android 行为
 
-- 前台 bridge 服务通知和消息通知都使用项目通知 glyph 作为 `smallIcon`。
+- 前台 bridge 服务通知和消息通知都使用主 logo 作为 `smallIcon`；Android 会按通知规范把它渲染为 alpha/单色图标，但这让 Mi Fitness 读取到的是产品 logo 资源，而不是系统 Android 图标。
 - 消息通知标题固定为 `CODEX · XIAOMI`，实际任务摘要继续放在正文，确保手环即使不转发彩色 logo 也能通过文字识别来源。
 - 消息通知继续保留正文、BigText/BigPicture、点击回 App 和通知渠道行为。
 - 不修改 `applicationId`、包名、LAN 协议、配对流程或通知权限流程。
