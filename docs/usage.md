@@ -5,14 +5,14 @@
 直接安装仓库中的 APK：
 
 ```bash
-$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/小米手环Codex通知-v0.3.6.apk
+$ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/小米手环Codex通知-v0.3.7.apk
 ```
 
-如果手机中已有 v0.3.1 或更早版本，需要先卸载旧 App，再安装 v0.3.6；这是因为旧版本使用了不同签名。v0.3.2 及之后的版本会复用固定签名，可以直接覆盖升级。
+如果手机中已有 v0.3.1 或更早版本，需要先卸载旧 App，再安装 v0.3.7；这是因为旧版本使用了不同签名。v0.3.2 及之后的版本会复用固定签名，可以直接覆盖升级。
 
 也可以把 APK 传到 Android 手机后手动安装：
 
-`android-companion/releases/小米手环Codex通知-v0.3.6.apk`
+`android-companion/releases/小米手环Codex通知-v0.3.7.apk`
 
 打开 App 后：
 
@@ -94,14 +94,14 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出为 `android-companion/releases/小米手环Codex通知-v0.3.6.apk`。固定签名密钥默认保存在被 Git 忽略的 `android-companion/.signing/release.keystore`，请发布者自行备份，不要提交到公开仓库。
+脚本使用 `javac`、`d8`、`aapt2`、`zipalign` 和 `apksigner`，不依赖 Gradle 下载。输出为 `android-companion/releases/小米手环Codex通知-v0.3.7.apk`。固定签名密钥默认保存在被 Git 忽略的 `android-companion/.signing/release.keystore`，请发布者自行备份，不要提交到公开仓库。
 
 ## 8. 排查
 
 - `health` 连接失败：确认手机和电脑同一 Wi-Fi，并重新输入 App 显示的 4 位匹配码。
 - HTTP 401：点击 App 的“刷新匹配码”，再让 Plugin 使用新数字配对。
 - 手机收到但手环没有：检查 Mi Fitness 的 App 通知开关、蓝牙连接、手环勿扰模式和手机后台限制。
-- Codex 没有自动通知：确认 Plugin 已安装、已完成“连接我的小米手环”，并在首次安全提示中允许“发送小米手环通知”；当前 Codex `exec` 非交互模式可能不会触发 `Stop` hook，交互式 Codex 任务优先使用。
+- Codex 没有自动通知：确认 Plugin 已安装、已完成小米手环初始化，并在首次安全提示中允许“发送小米手环通知”；当前 Codex `exec` 非交互模式可能不会触发 `Stop` hook，交互式 Codex 任务优先使用。
 - 电脑重启后：重新打开 Android App；bridge 会自动启动。
 
 ## 9. 旧版开发者兼容入口

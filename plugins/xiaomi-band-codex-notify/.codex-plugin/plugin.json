@@ -1,6 +1,6 @@
 {
   "name": "xiaomi-band-codex-notify",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Connect Codex task completion notifications to a Xiaomi Smart Band over LAN without Node.",
   "author": {
     "name": "Dylan Long",
@@ -18,7 +18,7 @@
     "developerName": "Dylan Long",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "请根据 GitHub 仓库 https://github.com/xDylanLong/xiaomi-band-codex-notify 安装并启用小米手环 Codex 通知 Skill，安装完成后只询问我的 4 位匹配码。",
+    "defaultPrompt": "请根据 GitHub 仓库 https://github.com/xDylanLong/xiaomi-band-codex-notify 安装并初始化小米手环 Codex 通知；如果需要，只询问我手机 App 中显示的 4 位匹配码。",
     "brandColor": "#1877F2",
     "logo": "./assets/logo.png"
   }

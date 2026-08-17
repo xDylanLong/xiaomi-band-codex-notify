@@ -2,7 +2,7 @@
 
 小米手环 10 Pro 的 Codex 任务完成通知工具。通过 Android App、Mi Fitness 和局域网连接，让 Codex、电脑程序和运动计划在小米手环上收到提醒；支持 4 位数字配对，不需要复制 token、输入手机 IP、安装 Node 或启动 bridge。
 
-[下载 Android App v0.3.6](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.6.apk)　·　[查看 GitHub 仓库](https://github.com/xDylanLong/xiaomi-band-codex-notify)　·　[查看完整使用指南](docs/usage.md)
+[下载 Android App v0.3.7](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.7.apk)　·　[查看 GitHub 仓库](https://github.com/xDylanLong/xiaomi-band-codex-notify)　·　[查看完整使用指南](docs/usage.md)
 
 ## 极简使用指南
 
@@ -10,7 +10,7 @@
 
 ### 1. 安装手机 App
 
-在 Android 手机上安装 [小米手环 Codex 通知 APK](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.6.apk)，打开后允许通知权限。
+在 Android 手机上安装 [小米手环 Codex 通知 APK](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.7.apk)，打开后允许通知权限。
 
 App 会自动启动局域网服务。电脑和手机必须连接同一个 Wi‑Fi。
 
@@ -105,7 +105,7 @@ Codex 完成任务 → 手机通知 → Mi Fitness → 小米手环
 
 ### Codex 没有自动通知怎么办？
 
-确认 Plugin 已安装、已经完成“连接我的小米手环”，并在首次安全提示中允许“发送小米手环通知”。如果是 `codex exec` 非交互式任务，可能不会触发 `Stop` Hook；优先使用交互式 Codex 会话。
+确认 Plugin 已安装、已经完成小米手环初始化，并在首次安全提示中允许“发送小米手环通知”。如果是 `codex exec` 非交互式任务，可能不会触发 `Stop` Hook；优先使用交互式 Codex 会话。
 
 ### 更换 Wi‑Fi 后怎么办？
 
@@ -116,7 +116,7 @@ Codex 完成任务 → 手机通知 → Mi Fitness → 小米手环
 普通用户不需要使用以下内容。仓库同时提供：
 
 - [Android 伴侣源码](android-companion/README.md)：自动启动局域网服务并发布 Android 通知。
-- [Codex Plugin](plugins/xiaomi-band-codex-notify/.codex-plugin/plugin.json)：包含连接 Skill 和 Python Stop Hook。
+- [Codex Plugin](plugins/xiaomi-band-codex-notify/.codex-plugin/plugin.json)：包含初始化 Skill 和 Python Stop Hook。
 - [电脑端 bridge CLI](bridge/README.md)：向 Android App 发送通知、运动计划和图片。
 - [桥接协议](bridge/protocol.md)：供脚本、构建工具和个人自动化调用。
 - [调研文档](docs/research/xiaomi-band-10-pro-watchface-capabilities.md)：小米手环 10 Pro 表盘和通知能力边界。
