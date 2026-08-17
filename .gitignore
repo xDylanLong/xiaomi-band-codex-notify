@@ -6,5 +6,12 @@ node_modules/
 .codex/
 codex/local-config.json
 android-companion/.signing/
+android-companion/.gradle/
+android-companion/**/build/
+android-companion/local.properties
+.idea/
+*.iml
+*.keystore
+*.jks
 __pycache__/
 *.pyc

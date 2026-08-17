@@ -29,7 +29,7 @@
 
 ### Android 通知图标
 
-新增 Android 专用单色 drawable 资源，例如 `android-companion/app/src/main/res/drawable/ic_notification.xml` 或等价的透明 PNG。通知发布逻辑不再使用 `android.R.drawable.ic_dialog_info`；实际通知使用主 logo 资源，兼容 glyph 作为备用。
+通知发布逻辑不再使用 `android.R.drawable.ic_dialog_info`；当前实现直接使用主 logo 资源作为通知图标和大图标，由 Android 按通知规范处理 `smallIcon` 的显示。
 
 通知构建器同时设置彩色主 logo 作为 `largeIcon`（在 Android/手机通知界面可用时展示），但不依赖 `largeIcon` 作为小米手环最终显示的保证；Mi Fitness 和手环固件是否展示大图仍遵循现有产品说明中的真实边界。
 
@@ -45,14 +45,14 @@
 
 - 使用透明背景生成主 logo，文字只允许为 `CODEX` 与 `XIAOMI`，避免随机字母、额外品牌、人物、设备外壳或水印。
 - 生成后检查两个原创抽象符号是否同时存在、手环表带和中央表盘是否形成明确连接、透明边缘是否干净，以及缩小到通知尺寸后是否仍可辨认；不得将图形描述为官方 ChatGPT/OpenAI 或 Xiaomi logo。
-- 如果生成图中的品牌细节不够稳定，保留构图作为参考，并用确定性的 Android drawable 重新绘制通知 glyph；不把不可辨认的生成细节直接用于 `smallIcon`。
+- 如果生成图中的品牌细节不够稳定，保留构图作为参考，并在发布前重新检查小尺寸通知图标的可辨认性。
 
 ## 验收标准
 
 1. 三份主 logo 文件存在且像素内容一致，均为透明背景的扁平彩色原创抽象手环标识。
 2. Android launcher 使用新主 logo。
 3. Android 前台服务通知和消息通知不再使用系统默认 info 图标。
-4. 通知使用项目自有单色 glyph 作为 `smallIcon`，并尝试设置主 logo `largeIcon`。
+4. 通知使用项目主 logo 作为 `smallIcon` 和 `largeIcon`。
 5. Android companion 能使用现有构建流程成功构建 APK，包名、版本和既有通知能力不回退。
 6. README、插件资源和 Android 资源不再残留旧版 logo。
 7. 验证报告明确区分：代码已使用新图标、手机通知实际展示、以及小米手环/ Mi Fitness 是否最终显示 logo；后两项需要真实设备确认，不能用静态构建结果代替。

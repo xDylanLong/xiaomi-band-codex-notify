@@ -13,13 +13,12 @@
 - Style is flat, restrained, rounded geometric, Apple-inspired, with clear whitespace and no 3D modeling, complex shadows, or glossy lighting.
 - Two newly invented abstract symbols must appear and be connected by one recognizable smart-band strap with a central capsule.
 - The product logo is transparent-background, square, full-color, and shared by product, Android launcher, and plugin surfaces.
-- The notification glyph is a high-contrast monochrome silhouette suitable for Android `smallIcon`.
+- The product logo is used for Android `smallIcon` and `largeIcon`, with Android applying its notification rendering rules.
 - Do not change `applicationId`, package name, LAN protocol, pairing flow, notification permissions, or existing notification payload behavior.
 - Do not claim that Mi Fitness or the Xiaomi band will necessarily display the color logo; distinguish code/resource verification from real-device verification.
 
 ## Files and Responsibilities
 
-- Create: `android-companion/app/src/main/res/drawable/ic_notification.xml` — deterministic white notification silhouette retained as a compatibility fallback.
 - Modify: `assets/logo.png` — full-color product logo.
 - Modify: `android-companion/app/src/main/res/drawable/logo.png` — byte-identical Android launcher logo.
 - Modify: `plugins/xiaomi-band-codex-notify/assets/logo.png` — byte-identical plugin logo.
@@ -42,18 +41,9 @@
 - [x] Inspect the generated image for both marks, the connecting band, clean alpha edges, and legibility at small size.
 - [x] Copy the selected image to all three product paths and verify the files are byte-identical.
 
-### Task 2: Add the Android notification glyph
+### Task 2: Use the product logo for Android notifications
 
-**Files:**
-- Create: `android-companion/app/src/main/res/drawable/ic_notification.xml`
-
-**Interfaces:**
-- Produces a valid Android drawable resource named `ic_notification`.
-- The resource is a transparent, white, high-contrast silhouette derived from the same two-symbol-and-band concept.
-
-- [x] Define a 24dp vector drawable with a solid white silhouette, rounded geometry, and no color-dependent detail.
-- [x] Keep the glyph simple enough to survive Android status-bar masking and Mi Fitness notification forwarding.
-- [x] Run Android resource validation through the existing manual Android build.
+The implementation uses the synchronized `logo` resource for both `smallIcon` and `largeIcon`; Android applies its notification icon rendering rules to the `smallIcon`. No separate fallback vector resource is shipped.
 
 ### Task 3: Wire notification publishing to project assets
 
@@ -93,17 +83,17 @@
 
 - [x] Run the existing Android build command from `android-companion/`.
 - [x] Inspect the APK manifest for the unchanged application ID and app label.
-- [x] Confirm the APK contains `logo` and `ic_notification` resources and no build errors.
+- [x] Confirm the APK contains the `logo` resource and no build errors.
 - [x] Report separately what was verified statically, what was verified by APK build, and what still requires a physical Android phone, Mi Fitness, and Xiaomi band.
 
 ## Commit Checkpoints
 
 1. Commit the generated/synchronized logo assets.
-2. Commit the notification glyph and Java integration.
+2. Commit the notification Java integration.
 3. Commit documentation adjustments and verified build output references if needed.
 
 ## Self-Review
 
 - Spec coverage: visual direction, shared product asset, Android monochrome constraint, `largeIcon`, non-regression boundaries, and real-device verification are covered by Tasks 1–5.
 - Placeholder scan: no TBD/TODO or unspecified implementation step is required.
-- Type/resource consistency: Java references `R.drawable.ic_notification` and `R.drawable.logo`, both defined in the Android module; public method signatures remain unchanged.
+- Type/resource consistency: Java resolves `R.drawable.logo` for both notification icon roles; public method signatures remain unchanged.
