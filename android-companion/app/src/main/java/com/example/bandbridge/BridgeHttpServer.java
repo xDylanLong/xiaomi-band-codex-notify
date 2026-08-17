@@ -67,7 +67,8 @@ public class BridgeHttpServer {
                 int colon = lines[index].indexOf(':');
                 if (colon > 0) headers.put(lines[index].substring(0, colon).trim().toLowerCase(Locale.US), lines[index].substring(colon + 1).trim());
             }
-            if (!("Bearer " + token).equals(headers.get("authorization"))) { write(client, Response.json(401, "{\"error\":\"unauthorized\"}")); return; }
+            boolean pairingRequest = "POST".equals(requestLine[0]) && "/v1/pair".equals(requestLine[1]);
+            if (!pairingRequest && !("Bearer " + token).equals(headers.get("authorization"))) { write(client, Response.json(401, "{\"error\":\"unauthorized\"}")); return; }
             int length = parseLength(headers.get("content-length"));
             if (length > MAX_BODY) { write(client, Response.json(413, "{\"error\":\"request too large\"}")); return; }
             byte[] bodyBytes = readBody(input, length);

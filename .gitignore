@@ -5,3 +5,5 @@ node_modules/
 *.idsig
 .codex/
 codex/local-config.json
+__pycache__/
+*.pyc

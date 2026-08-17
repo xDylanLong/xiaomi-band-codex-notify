@@ -21,18 +21,16 @@ export ANDROID_SDK_ROOT=/path/to/android-sdk
 ./android-companion/build-local.sh
 ```
 
-输出文件为 `android-companion/releases/小米手环Codex通知-debug.apk`。
+输出文件为 `android-companion/releases/小米手环Codex通知-v0.3.0.apk`。
 
 ## 首次配置
 
-1. 安装并打开 App，按 onboarding 允许通知权限。
-2. 可选：点击“开启手机通知监听”，在系统“通知使用权”里允许本 App 转发 Codex/ChatGPT 通知。
-3. 点击“启动 LAN bridge”，记下页面显示的手机 IP 和 token。
-4. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `小米手环Codex通知`。
-5. 电脑与手机连接同一个局域网。
-6. 在电脑端按 [`../docs/usage.md`](../docs/usage.md) 安装 Codex Stop hook。
+1. 安装并打开 App，按系统提示允许通知权限。
+2. App 会自动启动 LAN bridge；电脑与手机连接同一个局域网。
+3. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `小米手环Codex通知`。
+4. 点击“复制 Codex 配对信息”，按 [`../docs/usage.md`](../docs/usage.md) 安装 Plugin 并把信息粘贴给 Codex。
 
-已有 Debug APK：`releases/小米手环Codex通知-debug.apk`。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
+已有 APK：`releases/小米手环Codex通知-v0.3.0.apk`。安装命令和完整内容类型见 [`../docs/usage.md`](../docs/usage.md)。
 
 ## HTTP API
 

@@ -1,0 +1,5 @@
+interface:
+  display_name: "连接小米手环"
+  short_description: "在 Codex 中自动配置局域网小米手环完成任务通知"
+  default_prompt: "Use $connect to connect my Xiaomi Band and send a test notification."
+  brand_color: "#1877F2"

@@ -1,8 +1,8 @@
 # 小米手环Codex通知
 
-一个只走局域网的 Codex 完成通知工具：手机安装「小米手环Codex通知」App，电脑端安装一次 Codex Stop hook，任务完成后即可通过 Mi Fitness 把通知同步到小米手环。仓库也保留表盘、截图/飞书文档图片和运动计划卡片能力。
+一个只走局域网的 Codex 完成通知产品：手机安装「小米手环Codex通知」App，Codex 安装一次 Plugin，配对后即可通过 Mi Fitness 把通知同步到小米手环。普通用户不需要安装 Node、启动 bridge 或编辑 Codex 配置。
 
-[下载 Android APK（v0.2.0）](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.2.0.apk) · [查看 GitHub Releases](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases)
+[下载 Android APK（v0.3.0）](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.0.apk) · [查看 GitHub Releases](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases)
 
 ## 直接使用
 
@@ -16,17 +16,19 @@ python3 -m http.server 4173
 
 然后打开 <http://localhost:4173>。
 
-## Codex 完成通知
+## Codex 完成通知：普通用户流程
 
-1. 手机上安装 [小米手环Codex通知 APK](android-companion/releases/小米手环Codex通知-debug.apk)。
-2. App onboarding 中允许通知、启动 LAN bridge，并在 Mi Fitness 中允许 `小米手环Codex通知`。
-3. 电脑端执行一次：
+1. 手机上安装 [小米手环Codex通知 APK](android-companion/releases/小米手环Codex通知-v0.3.0.apk)。打开 App 后 bridge 会自动启动。
+2. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `小米手环Codex通知`。
+3. 在 Codex 中打开 `/plugins`，添加并安装 GitHub marketplace：
 
 ```bash
-node codex/install-hook.mjs --host <手机IP> --token '<App 中的 token>'
+codex plugin marketplace add xDylanLong/xiaomi-band-codex-notify
+codex /plugins
 ```
 
-4. 在 Codex 中执行 `/hooks`，审核并信任“发送小米手环通知”。
+4. 回到手机 App，点击“复制 Codex 配对信息”，把内容粘贴给 Codex，并说：`连接我的小米手环`。
+5. 在 Codex 中执行 `/hooks`，审核并信任“发送小米手环通知”。
 
 之后 Codex 每次完成一个交互式任务 turn，手机会收到摘要通知，再由 Mi Fitness 同步到手环。整个方案只走局域网，不使用云服务。
 
@@ -51,15 +53,16 @@ node codex/install-hook.mjs --host <手机IP> --token '<App 中的 token>'
 
 ## 能力最全方案
 
-仓库现在包含 Android 伴侣和电脑端 bridge CLI：
+仓库现在包含 Android 伴侣、Codex Plugin 和电脑端 bridge CLI：
 
-- [Android 伴侣源码](android-companion/README.md)：极简 onboarding、可选通知监听，在手机局域网 `8787` 端口接收通知请求，并发布标准 Android 通知。
-- [Codex hook](codex/stop-hook.mjs)：在 Codex turn 结束时自动发送摘要。
+- [Codex Plugin](plugins/xiaomi-band-codex-notify/.codex-plugin/plugin.json)：包含连接 Skill 和零 Node 的 Python Stop hook。
+- [Android 伴侣源码](android-companion/README.md)：打开 App 自动启动 bridge，在手机局域网 `8787` 端口接收通知请求，并发布标准 Android 通知。
+- [连接 Skill](plugins/xiaomi-band-codex-notify/skills/connect/SKILL.md)：在 Codex 中完成配对、健康检查和测试通知。
 - [电脑端 CLI](bridge/README.md)：用 `node bridge/bandctl.mjs notify ...` 给 Android 伴侣发通知。
 - [桥接协议](bridge/protocol.md)：适合 Codex、脚本和其他程序直接调用。
 - [完整使用说明](docs/usage.md)：安装 APK、配置 Mi Fitness、发送通知和运动计划。
 
-完整路径是：电脑/Codex → `bandctl` → Android 伴侣 → Mi Fitness App 通知同步 → 小米手环。仓库已提供并验证 Debug APK；如果要重新构建，可使用 Android Studio，或执行 `android-companion/build-local.sh`。
+完整路径是：Codex Plugin Stop hook → Android 伴侣 → Mi Fitness App 通知同步 → 小米手环。开发者仍可使用 CLI；普通用户不需要接触它。
 
 ## 调研文档
 

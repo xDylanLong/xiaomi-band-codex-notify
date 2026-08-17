@@ -12,8 +12,10 @@ import java.util.Locale;
 public class BridgeService extends Service implements BridgeHttpServer.Handler {
     public static final int PORT = 8787;
     public static final String EXTRA_TOKEN = "token";
+    public static final String PAIRING_CODE_KEY = "pairing_code";
     private BridgeHttpServer server;
     private String token;
+    private String pairingCode;
 
     @Override
     public void onCreate() {
@@ -26,6 +28,7 @@ public class BridgeService extends Service implements BridgeHttpServer.Handler {
     public int onStartCommand(Intent intent, int flags, int startId) {
         token = intent != null ? intent.getStringExtra(EXTRA_TOKEN) : null;
         if (token == null) token = getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE).getString(MainActivity.TOKEN_KEY, "");
+        pairingCode = getSharedPreferences(MainActivity.PREFS, MODE_PRIVATE).getString(PAIRING_CODE_KEY, "");
         if (server == null) {
             server = new BridgeHttpServer(PORT, token, this);
             server.start();
@@ -45,6 +48,17 @@ public class BridgeService extends Service implements BridgeHttpServer.Handler {
 
     @Override
     public BridgeHttpServer.Response handle(String method, String path, String body) {
+        if ("POST".equals(method) && "/v1/pair".equals(path)) {
+            try {
+                JSONObject payload = new JSONObject(body);
+                if (pairingCode.length() == 0 || !pairingCode.equals(payload.optString("code", ""))) {
+                    return BridgeHttpServer.Response.json(401, "{\"error\":\"invalid pairing code\"}");
+                }
+                return BridgeHttpServer.Response.json(200, new JSONObject().put("ok", true).put("token", token).toString());
+            } catch (Exception error) {
+                return BridgeHttpServer.Response.json(400, "{\"error\":\"invalid pairing request\"}");
+            }
+        }
         if ("GET".equals(method) && "/v1/health".equals(path)) {
             return BridgeHttpServer.Response.json(200, "{\"ok\":true,\"service\":\"band10pro-bridge\",\"protocol\":1}");
         }
