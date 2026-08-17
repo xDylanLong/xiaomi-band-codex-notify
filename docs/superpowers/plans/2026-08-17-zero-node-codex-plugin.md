@@ -42,7 +42,7 @@ Use the manifest paths `"skills": "./skills/"`, `"hooks": "./hooks/hooks.json"`,
 
 - [ ] **Step 3: Write the connect skill**
 
-The skill must trigger on “连接我的小米手环”, ask for the four-digit code shown by the Android app, call the bundled LAN discovery helper, write the plugin data config, verify `/v1/health`, send one test notification, and tell the user to open `/hooks` once.
+The skill must trigger on “连接我的小米手环”, ask for the four-digit code shown by the Android app, call the bundled LAN discovery helper, write the plugin data config, verify `/v1/health`, send one test notification, and rely on Codex's one-time security prompt instead of asking the user to type `/hooks`.
 
 - [ ] **Step 4: Validate the plugin package**
 

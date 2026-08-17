@@ -9,7 +9,7 @@
 - 产品名固定为 `小米手环Codex通知`。
 - 电脑与手机只通过同一局域网通信，不引入云服务。
 - 用户不需要接触 Node、编辑 `~/.codex/hooks.json` 或手动启动 bridge。
-- Codex 的非托管 Plugin hook 仍需用户在 `/hooks` 中审核并信任一次，这是 Codex 的安全边界。
+- Codex 的非托管 Plugin hook 仍需用户首次看到安全提示时允许一次，这是 Codex 的安全边界；产品不要求用户主动输入 `/hooks`。
 - 微信语音回复不在本次范围内。
 
 ## 方案
@@ -29,7 +29,7 @@
 - `.codex-plugin/plugin.json`：插件元数据、skill 路径和 hook 路径。
 - `hooks/hooks.json`：异步 `Stop` hook，命令使用系统 Python，不依赖 Node。
 - `hooks/stop.py`：读取 Codex Stop JSON，读取 `PLUGIN_DATA/config.json`，向 Android bridge 发送摘要通知；失败静默，不阻塞 Codex。
-- `skills/connect/SKILL.md`：当用户说“连接我的小米手环”并提供 4 位匹配码时，指导 Codex 通过局域网发现 bridge、写入 `PLUGIN_DATA/config.json`、发送测试通知，并提示 `/hooks` 审核。
+- `skills/connect/SKILL.md`：当用户说“连接我的小米手环”并提供 4 位匹配码时，指导 Codex 通过局域网发现 bridge、写入 `PLUGIN_DATA/config.json`、发送测试通知，并在需要时提示一次性安全确认。
 - `assets/logo.png`：复用产品 logo。
 
 ### Marketplace 与文档

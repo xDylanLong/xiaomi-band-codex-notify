@@ -20,7 +20,7 @@ python3 "${PLUGIN_ROOT}/scripts/pair.py" --code 4821 --test
 If `${PLUGIN_ROOT}` is unavailable in the shell, resolve the directory containing this plugin and run its `scripts/pair.py` directly. The helper discovers the phone over LAN, exchanges the pairing code for a token, and stores the returned token in private plugin data. Do not use the repository's legacy Node installer for the normal flow.
 
 4. Report only whether the bridge health check and test notification succeeded. If it fails, say that the computer and phone must be on the same Wi-Fi and ask the user to enter a fresh four-digit code.
-5. Tell the user to open `/hooks` once, review and trust the hook named `发送小米手环通知`. Do not claim automatic notifications are active until this trust step is complete.
+5. Do not ask the user to type `/hooks`. Tell them that Codex may show a one-time security prompt for `发送小米手环通知`; they should choose `允许` if it appears. If no prompt appears, continue normally. Do not claim automatic notifications are active until the hook is trusted.
 
 ## Existing configuration
 
