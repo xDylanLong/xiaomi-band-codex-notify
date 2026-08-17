@@ -43,7 +43,7 @@
 
 ### Task 2: Use the product logo for Android notifications
 
-The implementation uses the synchronized `ic_notification` vector for `smallIcon` and the full-color `logo` resource for `largeIcon`. The build refuses to proceed if the notification glyph is missing.
+The implementation uses the synchronized `ic_notification.png` bitmap for `smallIcon` and the full-color `logo` resource for `largeIcon`. The build refuses to proceed if the notification glyph is missing; the bitmap format is intentional for Mi Fitness compatibility.
 
 ### Task 3: Wire notification publishing to project assets
 
