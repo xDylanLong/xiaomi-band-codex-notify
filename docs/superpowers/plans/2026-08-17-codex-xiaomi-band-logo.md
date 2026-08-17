@@ -4,7 +4,7 @@
 
 **Goal:** Replace the current product logo and Android notification icon with a flat Apple-style original abstract mark connected by a recognizable smart-band strap, while preserving the existing notification and LAN bridge behavior and avoiding direct copies of third-party logos.
 
-**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains two newly invented abstract symbols, the exact labels `CODEX` and `XIAOMI`, and a blue smart-band strap with a dark capsule; it does not reproduce official ChatGPT/OpenAI or Xiaomi marks. Add a deterministic monochrome Android notification glyph for `smallIcon`, load the color logo as `largeIcon`, and keep all existing notification payload, channel, bridge, and pairing behavior unchanged.
+**Architecture:** Generate one transparent full-color PNG for product surfaces and synchronize it byte-for-byte across the web app, Android launcher, and plugin assets. The logo contains two newly invented abstract symbols, the exact labels `CODEX` and `XIAOMI`, and a blue smart-band strap with a dark capsule; it does not reproduce official ChatGPT/OpenAI or Xiaomi marks. Add a deterministic monochrome Android notification glyph for `smallIcon`, load the color logo as `largeIcon`, and use the fixed message title `CODEX · XIAOMI` so band notifications remain identifiable if the color icon is not forwarded.
 
 **Tech Stack:** OpenAI built-in image generation, PNG assets, Android Java `Notification.Builder`, Android drawable XML/PNG, Gradle Android build, shell-based asset verification.
 
@@ -65,8 +65,8 @@
 - `publish(Context, String, String, String, String)` keeps the existing signature and payload behavior.
 
 - [x] Replace both `android.R.drawable.ic_dialog_info` references with a project resource lookup for `ic_notification`, preserving compatibility with the manual build's lack of generated `R.java`.
-- [x] Decode the `logo` resource through a private helper and pass it to `setLargeIcon` without changing title/body/style logic.
-- [x] Keep BigText, BigPicture, pending intent, category, priority, channel IDs, and notification IDs unchanged.
+- [x] Decode the `logo` resource through a private helper and pass it to `setLargeIcon` while preserving the body/style logic.
+- [x] Keep BigText, BigPicture, pending intent, category, priority, channel IDs, and notification IDs unchanged; fix the message title to `CODEX · XIAOMI` while retaining the task summary as body text.
 - [x] Compile the Android module and build the APK successfully.
 
 ### Task 4: Verify product/resource integration

@@ -36,7 +36,8 @@
 ## Android 行为
 
 - 前台 bridge 服务通知和消息通知都使用项目通知 glyph 作为 `smallIcon`。
-- 消息通知继续保留现有标题、正文、BigText/BigPicture、点击回 App 和通知渠道行为。
+- 消息通知标题固定为 `CODEX · XIAOMI`，实际任务摘要继续放在正文，确保手环即使不转发彩色 logo 也能通过文字识别来源。
+- 消息通知继续保留正文、BigText/BigPicture、点击回 App 和通知渠道行为。
 - 不修改 `applicationId`、包名、LAN 协议、配对流程或通知权限流程。
 - 主 logo 继续作为 application launcher icon 使用。
 

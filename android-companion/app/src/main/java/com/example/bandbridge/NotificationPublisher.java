@@ -45,7 +45,7 @@ public final class NotificationPublisher {
         Notification.Builder builder = new Notification.Builder(context, MESSAGE_CHANNEL)
                 .setSmallIcon(resourceId(context, "drawable", "ic_notification"))
                 .setLargeIcon(productLogo(context))
-                .setContentTitle(title)
+                .setContentTitle("CODEX · XIAOMI")
                 .setContentText(body)
                 .setStyle(new Notification.BigTextStyle().bigText(body))
                 .setContentIntent(pending)
