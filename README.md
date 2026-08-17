@@ -1,78 +1,138 @@
-# 小米手环Codex通知
+# 小米手环 Codex 通知
 
-一个只走局域网的 Codex 完成通知产品：手机安装「小米手环Codex通知」App，Codex 安装一次 Plugin，配对后即可通过 Mi Fitness 把通知同步到小米手环。普通用户不需要安装 Node、启动 bridge 或编辑 Codex 配置。
+小米手环 10 Pro 的 Codex 任务完成通知工具。通过 Android App、Mi Fitness 和局域网连接，让 Codex、电脑程序和运动计划在小米手环上收到提醒；支持 4 位数字配对，不需要复制 token、输入手机 IP、安装 Node 或启动 bridge。
 
-[下载 Android APK（v0.3.1）](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.1.apk) · [查看 GitHub Releases](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases)
+[下载 Android App v0.3.1](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.1.apk)　·　[查看 GitHub 仓库](https://github.com/xDylanLong/xiaomi-band-codex-notify)　·　[查看完整使用指南](docs/usage.md)
 
-## 直接使用
+## 极简使用指南
 
-双击打开 [index.html](index.html) 即可运行，不需要安装依赖或登录账号。
+目标：Codex 完成任务后，手机收到通知，Mi Fitness 再把通知同步到小米手环。
 
-如果浏览器限制了本地文件的部分能力，也可以在项目目录执行：
+### 1. 安装手机 App
 
-```bash
-python3 -m http.server 4173
+在 Android 手机上安装 [小米手环 Codex 通知 APK](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.1.apk)，打开后允许通知权限。
+
+App 会自动启动局域网服务。电脑和手机必须连接同一个 Wi‑Fi。
+
+### 2. 打开小米手环通知
+
+在小米运动健康中打开：
+
+```text
+设备 → 通知和来电 → App 通知 → 小米手环 Codex 通知
 ```
 
-然后打开 <http://localhost:4173>。
+先点击手机 App 的“发送测试通知”，确认手环可以收到。
 
-## Codex 完成通知：普通用户流程
+### 3. 安装 Codex Plugin
 
-1. 手机上安装 [小米手环Codex通知 APK](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.1.apk)。打开 App 后 bridge 会自动启动。
-2. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `小米手环Codex通知`。
-3. 在 Codex 中打开 `/plugins`，添加并安装 GitHub marketplace：
+在 Codex 中打开 `/plugins`，添加并安装：
+
+```text
+xDylanLong/xiaomi-band-codex-notify
+```
+
+也可以在 Codex CLI 中执行：
 
 ```bash
 codex plugin marketplace add xDylanLong/xiaomi-band-codex-notify
 codex /plugins
 ```
 
-4. 回到手机 App，记下“Codex 匹配码”下的 4 位数字，在 Codex 中输入：`连接我的小米手环，匹配码 4821`。不需要复制 token、IP 或配对文本；Plugin 会自动在局域网发现手机。
-5. 不需要手动执行 `/hooks`。首次任务结束时，如果 Codex 弹出“发送小米手环通知”的安全确认，点击“允许”一次；之后自动生效。
+安装完成后重新打开一个 Codex 会话。
 
-之后 Codex 每次完成一个交互式任务 turn，手机会收到摘要通知，再由 Mi Fitness 同步到手环。整个方案只走局域网，不使用云服务。
+### 4. 输入 4 位匹配码
 
-## 在小米手环 10 Pro 上查看
+打开手机 App，记下“Codex 匹配码”下的 4 位数字，然后在 Codex 中输入：
 
-当前工具采用官方可验证的“相片表盘”路径：
-
-1. 在编辑器中完成设计，点击“导出 PNG”。
-2. 将 PNG 传到手机相册。
-3. 打开小米运动健康：设备 → 管理表盘 → 全部 → 自定义。
-4. 选择一个相片表盘，进入编辑 → 添加照片，选择导出的 PNG 并同步。
-
-这条路径是把图片作为官方相片表盘背景使用，不是把 PNG 编译成小米原生 `.bin` 表盘包。项目 JSON 是为了保存布局和背景，方便继续编辑，也为未来 Android/Vela 适配器提供输入。
-
-注意：导出的 PNG 是静态背景。编辑器里的时间、步数和心率是视觉排版示例，不会通过本工具实时同步到手环；手环能否在相片表盘模板上叠加动态时间/数据，由你在 Mi Fitness 中选择的模板决定。
-
-## 三个核心需求的当前结论
-
-- 手机第三方通知到手环：支持。Mi Fitness 可以把手机通知同步到手环，需要在“设备 → 通知和来电 → App 通知”里开启。电脑或 Codex 通知先由 Android 伴侣发布到手机通知栏，再沿这条路径到手环。
-- 截图、飞书文档和运动计划：支持静态查看。上传截图/文档图片，或切换到“运动计划卡片”填写日期、标题、时长、目标和备注，再导出 PNG 同步。
-- 微信语音回复：不支持。10 Pro 官方 FAQ 说明第三方 App 通知只能查看、不能回复；来电快捷回复是预设文字，不是微信语音。要做电脑通知桥接或双向回复，需要另外开发 Android 伴侣 App，并不能由当前浏览器编辑器直接完成。
-
-## 能力最全方案
-
-仓库现在包含 Android 伴侣、Codex Plugin 和电脑端 bridge CLI：
-
-- [Codex Plugin](plugins/xiaomi-band-codex-notify/.codex-plugin/plugin.json)：包含连接 Skill 和零 Node 的 Python Stop hook。
-- [Android 伴侣源码](android-companion/README.md)：打开 App 自动启动 bridge，在手机局域网 `8787` 端口接收通知请求，并发布标准 Android 通知。
-- [连接 Skill](plugins/xiaomi-band-codex-notify/skills/connect/SKILL.md)：在 Codex 中完成配对、健康检查和测试通知。
-- [电脑端 CLI](bridge/README.md)：用 `node bridge/bandctl.mjs notify ...` 给 Android 伴侣发通知。
-- [桥接协议](bridge/protocol.md)：适合 Codex、脚本和其他程序直接调用。
-- [完整使用说明](docs/usage.md)：安装 APK、配置 Mi Fitness、发送通知和运动计划。
-
-完整路径是：Codex Plugin Stop hook → 局域网自动发现 → Android 伴侣 → Mi Fitness App 通知同步 → 小米手环。开发者仍可使用 CLI；普通用户不需要接触它。
-
-## 调研文档
-
-详细结论见 [小米手环 10 Pro 表盘能力调研](docs/research/xiaomi-band-10-pro-watchface-capabilities.md)。设计边界和数据格式见 [设计文档](docs/superpowers/specs/2026-08-16-xiaomi-band-10-pro-watchface-tool-design.md)。
-
-## 验证
-
-```bash
-node --check renderer.js
-node --check app.js
+```text
+连接我的小米手环，匹配码 1234
 ```
 
-浏览器验证重点：上传背景图、拖动组件、导出 PNG、导出并重新导入 `.watchface.json`。导出的 PNG 应为 480×336。
+把 `1234` 替换成手机上实际显示的数字。Plugin 会自动发现手机、完成配对、保存内部配置并发送测试通知。
+
+不需要复制 token、手机 IP 或配对文本。
+
+### 5. 首次允许一次安全提示
+
+不需要手动输入 `/hooks`。首次使用时，如果 Codex 弹出“发送小米手环通知”的安全确认，点击“允许”一次即可；之后 Codex 完成交互式任务时会自动发送通知。
+
+### 6. 开始使用
+
+正常使用 Codex 即可：
+
+```text
+Codex 完成任务 → 手机通知 → Mi Fitness → 小米手环
+```
+
+完整的安装、配对、运动计划、截图和故障排查说明见：[完整使用指南](docs/usage.md)。
+
+## 这个工具能做什么
+
+- **Codex 完成通知**：任务结束后，把完成摘要发送到手机和小米手环。
+- **电脑通知**：通过局域网把构建、脚本、定时任务等电脑消息发送到手环。
+- **运动计划**：创建日期、时长、目标、备注等运动计划，并发送文字提醒。
+- **截图和飞书文档**：上传图片或导出的飞书文档截图，生成适合相片表盘使用的 PNG。
+- **小米手环 10 Pro 自定义内容**：通过 Mi Fitness 的相片表盘查看静态计划卡片和图片。
+- **极简配对**：4 位数字匹配码 + 局域网自动发现，token 由 Plugin 自动换取和保存。
+- **隐私和网络边界**：只在手机与电脑所在的局域网工作，不使用云端中转。
+
+## 当前不支持什么
+
+- **微信语音回复**：小米手环 10 Pro 的第三方 App 通知目前只能查看，不能直接回复微信语音。
+- **手环原生动态表盘数据注入**：导出的 PNG 是静态图片，不是小米原生 `.bin` 表盘包。
+- **图片一定显示在手环通知中**：手机通知可以携带图片，但手环是否显示图片取决于 Mi Fitness 和手环固件。
+- **非交互式 Codex 任务保证触发**：当前主要支持交互式 Codex 任务的完成通知。
+
+## 在小米手环 10 Pro 上查看运动计划或图片
+
+当前采用官方可验证的相片表盘路径：
+
+1. 在根目录打开 [index.html](index.html)。
+2. 上传截图、飞书文档图片，或切换到“运动计划卡片”。
+3. 填写内容并导出 PNG。
+4. 将 PNG 传到手机相册。
+5. 在小米运动健康中进入：`设备 → 管理表盘 → 全部 → 自定义`。
+6. 选择相片表盘，添加导出的 PNG 并同步。
+
+导出的 PNG 是静态背景。编辑器中的时间、步数和心率是排版示例，不会通过本工具实时写入手环。
+
+## 常见问题
+
+### 配对失败怎么办？
+
+确认手机和电脑连接同一个 Wi‑Fi，并保持 App 打开。然后点击 App 的“刷新匹配码”，在 Codex 中重新输入新的 4 位数字。
+
+### 手机收到通知，但手环没有收到怎么办？
+
+检查以下设置：
+
+- Mi Fitness 是否开启“小米手环 Codex 通知”的 App 通知；
+- 手机蓝牙是否连接手环；
+- 手环是否开启勿扰模式；
+- Android 是否限制 App 后台运行。
+
+### Codex 没有自动通知怎么办？
+
+确认 Plugin 已安装、已经完成“连接我的小米手环”，并在首次安全提示中允许“发送小米手环通知”。如果是 `codex exec` 非交互式任务，可能不会触发 `Stop` Hook；优先使用交互式 Codex 会话。
+
+### 更换 Wi‑Fi 后怎么办？
+
+重新打开手机 App，点击“刷新匹配码”，然后在 Codex 中重新输入新的匹配码。
+
+## 开发者入口
+
+普通用户不需要使用以下内容。仓库同时提供：
+
+- [Android 伴侣源码](android-companion/README.md)：自动启动局域网服务并发布 Android 通知。
+- [Codex Plugin](plugins/xiaomi-band-codex-notify/.codex-plugin/plugin.json)：包含连接 Skill 和 Python Stop Hook。
+- [电脑端 bridge CLI](bridge/README.md)：向 Android App 发送通知、运动计划和图片。
+- [桥接协议](bridge/protocol.md)：供脚本、构建工具和个人自动化调用。
+- [调研文档](docs/research/xiaomi-band-10-pro-watchface-capabilities.md)：小米手环 10 Pro 表盘和通知能力边界。
+- [完整设计文档](docs/superpowers/specs/2026-08-16-xiaomi-band-10-pro-watchface-tool-design.md)：数据格式和实现边界。
+
+旧版 Codex 或个人脚本仍可使用仓库中的 Node 兼容入口，但普通用户不需要安装 Node、编辑 Codex 配置文件或手动启动 bridge。
+
+## 关键词
+
+小米手环 10 Pro、自定义表盘、小米手环通知、Codex 通知、电脑通知、Android 通知、Mi Fitness、局域网通知、运动计划、截图显示、飞书文档、相片表盘、Codex Plugin、Codex Hook。
