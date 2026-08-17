@@ -18,7 +18,7 @@ python3 -m http.server 4173
 
 ## Codex 完成通知：普通用户流程
 
-1. 手机上安装 [小米手环Codex通知 APK](android-companion/releases/小米手环Codex通知-v0.3.1.apk)。打开 App 后 bridge 会自动启动。
+1. 手机上安装 [小米手环Codex通知 APK](https://github.com/xDylanLong/xiaomi-band-codex-notify/releases/latest/download/xiaomi-band-codex-notify-v0.3.1.apk)。打开 App 后 bridge 会自动启动。
 2. 在 Mi Fitness → 设备 → 通知和来电 → App 通知中，允许 `小米手环Codex通知`。
 3. 在 Codex 中打开 `/plugins`，添加并安装 GitHub marketplace：
 
