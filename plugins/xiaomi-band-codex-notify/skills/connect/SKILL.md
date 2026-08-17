@@ -1,6 +1,6 @@
 ---
 name: connect
-description: Use when the user asks to initialize 小米手环Codex通知, invokes $connect, provides the GitHub repository URL, gives a four-digit pairing code, or wants Codex completion notifications on a Xiaomi Band.
+description: Use when the user asks to initialize 小米手环Codex通知, invokes $connect, provides the GitHub repository URL, gives a four-digit pairing code after Bootstrap, or wants Codex completion notifications on a Xiaomi Band.
 ---
 
 # Connect 小米手环Codex通知

@@ -29,24 +29,21 @@ $ANDROID_SDK_ROOT/platform-tools/adb install -r android-companion/releases/小�
 
 选中 `小米手环Codex通知`。先用手机通知测试，确认手环可以收到伴侣 App 的通知。
 
-## 3. 安装 Plugin 并配对
+## 3. 复制一句话安装 Skill
 
-在 Codex CLI 中添加公开 marketplace：
-
-```bash
-codex plugin marketplace add xDylanLong/xiaomi-band-codex-notify
-codex /plugins
-```
-
-在 Codex 桌面端也可以直接从 Plugins Directory 添加 `xDylanLong/xiaomi-band-codex-notify`。安装后新开一个 Codex 会话。
-
-回到 App 查看 4 位匹配码，把下面整句话复制到 Codex：
+不需要先打开 `/plugins`，把下面整句话复制到 Codex：
 
 ```text
-使用 $connect，根据 GitHub 仓库 https://github.com/xDylanLong/xiaomi-band-codex-notify 完成小米手环 Codex 通知初始化。我的 4 位匹配码是 4821。请自动完成配对、发送测试通知并启用任务完成通知。
+请根据 GitHub 仓库 https://github.com/xDylanLong/xiaomi-band-codex-notify 安装并启用“小米手环 Codex 通知”Skill。安装完成后，请只询问我手机 App 中显示的 4 位匹配码，不要让我执行命令、复制 token 或输入手机 IP。
 ```
 
-Skill 会通过局域网自动发现手机、保存私有配置并发送测试通知。不需要手动执行 `/hooks`；首次任务结束时，如果 Codex 弹出“发送小米手环通知”的安全确认，点击“允许”一次即可。之后自动生效。如果换 Wi-Fi 或点击了“刷新匹配码”，重新复制这句话并替换新的 4 位数字即可。
+Skill 安装完成后会主动询问匹配码。回到手机 App 查看 4 位数字，例如 `4821`，只回复：
+
+```text
+4821
+```
+
+Skill 会通过局域网自动发现手机、保存私有配置并发送测试通知。不需要手动执行 `/hooks`；首次任务结束时，如果 Codex 弹出“发送小米手环通知”的安全确认，点击“允许”一次即可。之后自动生效。如果换 Wi-Fi 或点击了“刷新匹配码”，重新打开 App 并回复新的 4 位数字即可。
 
 4 位匹配码只用于可信局域网内的首次配对，不是高强度密码；App 会限制成功发现响应次数，并提供刷新按钮。token 不会显示在 App 界面，也不需要用户复制。
 

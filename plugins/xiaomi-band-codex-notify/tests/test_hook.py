@@ -45,6 +45,8 @@ class HookTests(unittest.TestCase):
         self.assertEqual(pairing["host"], "127.0.0.1")
         self.assertEqual(pairing["code"], "1234")
         self.assertEqual(parse_pairing("code=1234"), {"port": 8787, "code": "1234"})
+        with self.assertRaises(ValueError):
+            parse_pairing("code=123")
         config = {"host": "127.0.0.1", "port": 8787, "token": "secret"}
         with tempfile.TemporaryDirectory() as directory:
             env = {"PLUGIN_DATA": directory}

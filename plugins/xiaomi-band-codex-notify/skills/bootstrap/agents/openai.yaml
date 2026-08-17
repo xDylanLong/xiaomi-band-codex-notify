@@ -1,0 +1,5 @@
+interface:
+  display_name: "初始化小米手环 Codex 通知"
+  short_description: "安装 Skill 后自动询问 4 位匹配码并完成配对"
+  default_prompt: "请根据 GitHub 仓库 https://github.com/xDylanLong/xiaomi-band-codex-notify 安装并启用小米手环 Codex 通知 Skill，安装完成后只询问我的 4 位匹配码。"
+  brand_color: "#1877F2"
