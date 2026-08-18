@@ -2,6 +2,7 @@ import http.server
 import json
 import socketserver
 import socket
+import subprocess
 import sys
 import tempfile
 import threading
@@ -32,6 +33,24 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
 
 class HookTests(unittest.TestCase):
+    def test_stop_hook_command_does_not_depend_on_versioned_plugin_root(self):
+        hooks = json.loads((ROOT / "hooks" / "hooks.json").read_text())
+        command = hooks["hooks"]["Stop"][0]["hooks"][0]["command"]
+        self.assertNotIn("${PLUGIN_ROOT}", command)
+
+        environment = dict(__import__("os").environ)
+        with tempfile.TemporaryDirectory() as directory:
+            environment["PLUGIN_DATA"] = directory
+            result = subprocess.run(
+                command,
+                input=b'{"hook_event_name":"Stop"}',
+                shell=True,
+                capture_output=True,
+                env=environment,
+                timeout=5,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr.decode())
+
     def test_build_notification_filters_and_truncates(self):
         self.assertIsNone(build_notification({"hook_event_name": "UserPromptSubmit"}))
         self.assertIsNone(build_notification({"hook_event_name": "Stop", "stop_hook_active": True}))
