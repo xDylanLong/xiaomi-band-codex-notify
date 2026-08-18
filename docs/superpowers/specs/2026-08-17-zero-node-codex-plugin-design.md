@@ -29,13 +29,13 @@
 - `.codex-plugin/plugin.json`：插件元数据、skill 路径和 hook 路径。
 - `hooks/hooks.json`：异步 `Stop` hook，命令使用系统 Python，不依赖 Node。
 - `hooks/stop.py`：读取 Codex Stop JSON，读取 `PLUGIN_DATA/config.json`，向 Android bridge 发送摘要通知；失败静默，不阻塞 Codex。
-- `skills/connect/SKILL.md`：当用户说“连接我的小米手环”并提供 4 位匹配码时，指导 Codex 通过局域网发现 bridge、写入 `PLUGIN_DATA/config.json`、发送测试通知，并在需要时提示一次性安全确认。
+- `skills/initialize/SKILL.md`：统一处理安装、初始化和 4 位匹配码配对，指导 Codex 通过局域网发现 bridge、写入 `PLUGIN_DATA/config.json`、发送测试通知，并在需要时提示一次性安全确认。
 - `assets/logo.png`：复用产品 logo。
 
 ### Marketplace 与文档
 
 - 仓库增加 `.agents/plugins/marketplace.json`，让 Codex 桌面端和 CLI 可以从本仓库发现插件。
-- README 主流程改为 APK → `/plugins` → “连接我的小米手环”，Node 安装脚本降级为开发者兼容入口。
+- README 主流程改为 APK → 一句话初始化 Skill → 4 位匹配码配对，Node 安装脚本降级为开发者兼容入口。
 - `docs/usage.md` 只保留普通用户必须步骤，并明确 bridge 自动启动和可选高级监听。
 
 ## 数据流
